@@ -1,5 +1,6 @@
 <?php 
        session_start();
+       
         ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -98,38 +99,7 @@
             display: block;
             margin: 0 auto;
         }
-        #terre{
-            background-color: rgba(0, 0, 0, 0.2);
-            opacity: 1;
-            filter:grayscale(100%);
-        }
-        #titan{
-            opacity: 20%;
-        }
-        #io{
-            opacity: 20%;
-        }
-        #nessos{
-            opacity: 20%;
-        }
-.grayscale-overlay {
-            position: absolute;
-            background-color: rgba(0, 0, 0, 0.5); /* Noir semi-transparent */
-            border-radius: 50%; /* Assure que le div soit rond */
-            width: 5%; /* Largeur de l'élément */
-            height: 5%; /* Hauteur de l'élément */
-            top: 50%; /* Centrer verticalement */
-            left: 50%; /* Centrer horizontalement */
-            transform: translate(-50%, -50%); /* Déplacer l'élément de moitié de sa taille vers le haut et vers la gauche */
-        }
 
-        /* Media query pour des ajustements responsives */
-        @media screen and (max-width: 768px) {
-            .grayscale-overlay {
-                width: 10%; /* Largeur de l'élément pour les écrans plus petits */
-                height: 10%; /* Hauteur de l'élément pour les écrans plus petits */
-            }
-        }
     </style>
 </head>
 <body color="black" id="map" link="white" vlink="white" alink="purple">
@@ -145,7 +115,6 @@
                         if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
                         echo '<li><a href="map.php">MAP</a></li><li class=dropdown><a class=dropbtn>'.($_SESSION["pseudo"]).'</a>
                         <div class="dropdown-content">
-                            <a href="user.php">Compte</a>
                             <a href="deco.php">Déconnecter</a>
                         </div>
                         </li>';
@@ -176,18 +145,6 @@
     <area id="io" target="_blank" alt="io" title="io" href="niv3.php" coords="241,200,43" shape="circle">
     <area id="nessos" target="_blank" alt="nessos" title="nessos" href="niv4.php" coords="815,143,33" shape="circle">
 </map>
-<script>
-        // Récupérer les éléments <area>
-        var terre = document.getElementById("terre");
-        var titan = document.getElementById("titan");
-        var io = document.getElementById("io");
-        var nessos = document.getElementById("nessos");
 
-        // Appliquer un style de filtre de désaturation (grisaille) aux éléments <area>
-        terre.style.filter = "grayscale(100%)";
-        titan.style.filter = "grayscale(100%)";
-        io.style.filter = "grayscale(100%)";
-        nessos.style.filter = "grayscale(100%)";
-    </script>
 </body>
 </html>

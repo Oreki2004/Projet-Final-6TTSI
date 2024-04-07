@@ -107,7 +107,6 @@
                         echo '<li><a href="map.php">MAP</a></li>
                               <li class=dropdown><a class=dropbtn>' . ($_SESSION["pseudo"]) . '</a>
                                   <div class="dropdown-content">
-                                      <a href="user.php">Compte</a>
                                       <a href="deco.php">Déconnecter</a>
                                   </div>
                               </li>';

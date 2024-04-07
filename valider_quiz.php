@@ -1,37 +1,79 @@
 <?php
 session_start();
+// Connexion à la base de données
 $mysqli = new mysqli("localhost", "root", "", "urd");
 
-if($mysqli === false){
-    die("ERREUR : Impossible de se connecter. " . $mysqli->connect_error);
+// Vérification de la connexion
+if ($mysqli->connect_error) {
+    die("La connexion à la base de données a échoué : " . $mysqli->connect_error);
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $score = 0;
-    foreach ($_POST as $question_number => $answer_id) {
-        $question_number = str_replace('question_', '', $question_number); // Retirer le préfixe 'question_' pour obtenir le numéro de question
-        $query = "SELECT id FROM quiz_option WHERE id = $answer_id AND id_question = $question_number";
-        $sqli = $mysqli->prepare($query);
-        $sqli->bind_param("ii", $answer_id, $question_number);
-        $sqli->execute();
-        $resultat = $sqli->get_result();
-        if ($resultat->num_rows > 0) {
-            $score++;
-        }
-    }
+// Récupération du score actuel du joueur
+$joueur = $_SESSION['pseudo']; // Remplacez "Nom du joueur" par le nom du joueur
+$query_select_score = "SELECT score FROM score_quiz WHERE joueur = '$joueur'";
+$result_select_score = $mysqli->query($query_select_score);
 
-    if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
-        $user_id = $_SESSION['id']; 
-        $insert_query = "INSERT INTO score (user_id, score) VALUES (?, ?)";
-        $sqli = $mysqli->prepare($insert_query);
-        $sqli->bind_param("ii", $user_id, $score);
-        if ($sqli->execute()) {
-            echo "Quiz soumis avec succès ! Votre score : $score";
+if ($result_select_score) {
+    // Si le joueur existe dans la base de données
+    if ($result_select_score->num_rows > 0) {
+        $row = $result_select_score->fetch_assoc();
+        $score_joueur = $row['score'];
+
+        // Calcul du score actuel
+        $score_actuel = 0;
+        $reponses_utilisateur = isset($_POST['reponses']) ? $_POST['reponses'] : array();
+        foreach ($reponses_utilisateur as $id_question => $reponse_utilisateur) {
+            $query = "SELECT est_correcte FROM quiz_reponse WHERE id = $reponse_utilisateur";
+            $result = $mysqli->query($query);
+            if ($result) {
+                $row = $result->fetch_assoc();
+                if ($row['est_correcte']) {
+                    $score_actuel++;
+                }
+            }
+        }
+
+        // Mise à jour du score si nécessaire
+        if ($score_actuel > $score_joueur) {
+            $query_update_score = "UPDATE score_quiz SET score = $score_actuel WHERE joueur = '$joueur'";
+            $result_update_score = $mysqli->query($query_update_score);
+            if ($result_update_score) {
+                echo "Ton score actuel est de ".$score_actuel;
+            } else {
+                echo "Erreur lors de la mise à jour du score : " . $mysqli->error;
+            }
         } else {
-            echo "Erreur lors de la soumission du quiz.";
+            echo "Ton score actuel est de ".$score_actuel.", tu peux faire mieux.";
         }
     } else {
-        echo "Veuillez vous connecter pour soumettre le quiz.";
+        // Si le joueur n'existe pas dans la base de données, on insère son score
+        // Calcul du score actuel
+        $score_actuel = 0;
+        $reponses_utilisateur = isset($_POST['reponses']) ? $_POST['reponses'] : array();
+        foreach ($reponses_utilisateur as $id_question => $reponse_utilisateur) {
+            $query = "SELECT est_correcte FROM quiz_reponse WHERE id = $reponse_utilisateur";
+            $result = $mysqli->query($query);
+            if ($result) {
+                $row = $result->fetch_assoc();
+                if ($row['est_correcte']) {
+                    $score_actuel++;
+                }
+            }
+        }
+
+        // Insertion du score
+        $query_insert_score = "INSERT INTO score_quiz (joueur, score) VALUES ('$joueur', $score_actuel)";
+        $result_insert_score = $mysqli->query($query_insert_score);
+        if ($result_insert_score) {
+            echo "Score inséré avec succès.";
+        } else {
+            echo "Erreur lors de l'insertion du score : " . $mysqli->error;
+        }
     }
+} else {
+    echo "Erreur lors de la récupération du score : " . $mysqli->error;
 }
+
+// Fermeture de la connexion à la base de données
+$mysqli->close();
 ?>

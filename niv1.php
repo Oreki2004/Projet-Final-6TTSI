@@ -111,7 +111,6 @@
                         echo '<li><a href="map.php">MAP</a></li>
                               <li class=dropdown><a class=dropbtn>' . ($_SESSION["pseudo"]) . '</a>
                                   <div class="dropdown-content">
-                                      <a href="user.php">Compte</a>
                                       <a href="deco.php">Déconnecter</a>
                                   </div>
                               </li>';
@@ -125,25 +124,43 @@
     <div class="quiz-container">
         <h2>Quiz</h2>
         <form method="post" action="valider_quiz.php">
-            <?php 
-                $mysqli = mysqli_connect("localhost", "root", "", "urd") or die("La connexion à la base de données a échoué : " . mysqli_connect_error());
-                $query = "SELECT * FROM quiz";
-                $resultat = $mysqli->query($query);
-                $question_num = 1;
-                while ($ligne = $resultat->fetch_assoc()) {
-                    echo "<div class='question'>";
-                    echo "<p><strong>Question $question_num:</strong> " . $ligne['question'] . "</p>";
-                    echo "<ul>";
-                    $query_reponses = "SELECT * FROM quiz_option WHERE id = " . $ligne['id'];
-                    $resultat_reponses = $mysqli->query($query_reponses);
-                    while ($ligne_reponse = $resultat_reponses->fetch_assoc()) {
-                        echo "<li><input type='radio' name='question_$question_num' value='" . $ligne_reponse['id'] . "' required>" . $ligne_reponse['reponse'] . "</li>";
-                    }
-                    echo "</ul>";
-                    echo "</div>";
-                    $question_num++;
-                }
-            ?>
+                <?php
+        // Connexion à la base de données
+        $mysqli = new mysqli("localhost", "root", "", "urd");
+
+        // Vérification de la connexion
+        if ($mysqli->connect_error) {
+            die("La connexion à la base de données a échoué : " . $mysqli->connect_error);
+        }
+
+        // Récupération des questions aléatoires
+        $query_questions = "SELECT * FROM quiz ORDER BY RAND() LIMIT 6";
+        $result_questions = $mysqli->query($query_questions);
+
+        // Affichage des questions
+        while ($row = $result_questions->fetch_assoc()) {
+            // Récupération des réponses pour cette question
+            $query_answers = "SELECT * FROM quiz_reponse WHERE id_question = " . $row['id'] . " ORDER BY RAND()";
+            $result_answers = $mysqli->query($query_answers);
+            
+            // Affichage de la question
+            echo "<div class='question'>";
+            echo "<p><strong>Question:</strong> " . $row['question'] . "</p>";
+            
+            // Affichage des réponses
+            while ($answer = $result_answers->fetch_assoc()) {
+                echo "<input type='radio' name='reponses[" . $row['id'] . "]' value='" . $answer['id'] . "' required>";
+                echo $answer['reponse'] . "<br>";
+            }
+            
+            echo "</div>";
+        }
+
+        // Fermeture de la connexion à la base de données
+        $mysqli->close();
+        ?>
+
+
             <input type="submit" value="Submit">
         </form>
     </div>
