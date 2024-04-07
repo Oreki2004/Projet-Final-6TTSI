@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : lun. 01 avr. 2024 à 08:44
--- Version du serveur : 8.2.0
--- Version de PHP : 8.2.13
+-- Généré le : dim. 07 avr. 2024 à 19:57
+-- Version du serveur : 8.0.31
+-- Version de PHP : 8.0.26
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -55,50 +55,59 @@ CREATE TABLE IF NOT EXISTS `quiz` (
   `id` int NOT NULL AUTO_INCREMENT,
   `question` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `quiz`
 --
 
 INSERT INTO `quiz` (`id`, `question`) VALUES
-(1, 'D\'où viens le pouvoir des Gardiens?');
+(1, 'D\'où viens le pouvoir des Gardiens?'),
+(2, 'Qui a commencé la Guerre Rouge?');
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `quiz_option`
+-- Structure de la table `quiz_reponse`
 --
 
-DROP TABLE IF EXISTS `quiz_option`;
-CREATE TABLE IF NOT EXISTS `quiz_option` (
+DROP TABLE IF EXISTS `quiz_reponse`;
+CREATE TABLE IF NOT EXISTS `quiz_reponse` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `id_question` int NOT NULL,
-  `reponse` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
+  `id_question` int DEFAULT NULL,
+  `reponse` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `est_correcte` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_question` (`id_question`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Déchargement des données de la table `quiz_option`
+-- Déchargement des données de la table `quiz_reponse`
 --
 
-INSERT INTO `quiz_option` (`id`, `id_question`, `reponse`) VALUES
-(1, 0, 'Le Voyageur');
+INSERT INTO `quiz_reponse` (`id`, `id_question`, `reponse`, `est_correcte`) VALUES
+(1, 1, 'Le Voyageur', 1);
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `score`
+-- Structure de la table `score_quiz`
 --
 
-DROP TABLE IF EXISTS `score`;
-CREATE TABLE IF NOT EXISTS `score` (
+DROP TABLE IF EXISTS `score_quiz`;
+CREATE TABLE IF NOT EXISTS `score_quiz` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `id_joueur` int NOT NULL,
-  `pseudo` varchar(255) NOT NULL,
+  `joueur` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `score` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `score_quiz`
+--
+
+INSERT INTO `score_quiz` (`id`, `joueur`, `score`) VALUES
+(1, 'Oreki', 1);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
