@@ -95,6 +95,7 @@
         .dropdown:hover .dropdown-content {
         display: block;
         }
+
         img{
             display: block;
             margin: 0 auto;
@@ -128,7 +129,7 @@
 
         </header>
 
-        <div style="position: relative;">
+        <div style="position: relative;margin-top:5%;">
         <img src="img/destiny2_maps_director_s4.jpg" usemap="#image-map">
 
         <!-- Grayscale Overlays -->

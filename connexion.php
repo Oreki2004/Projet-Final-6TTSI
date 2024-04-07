@@ -106,6 +106,53 @@
 		.content a:hover {
 			text-decoration: underline;
 		}
+		      li a,
+        .dropbtn {
+        display: inline-block;
+        color: black;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        }
+
+        .dropdown li a:hover,
+        .dropdown:hover .dropbtn {
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        transition-duration: 0.6s;
+        }
+
+        li.dropdown {
+        display: inline-block;
+        }
+
+        .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+        
+        }
+
+        .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        margin: 5px;
+        text-decoration: none;
+        display: block;
+        text-align: left;
+        }
+
+        .dropdown-content a:hover {
+        background-color: #f1f1f1;
+        }
+
+        .dropdown:hover .dropdown-content {
+        display: block;
+        
+        }
 
     </style>
 </head>
@@ -118,11 +165,10 @@
                 <li><a href="leaderboard.php">LEADERBOARD</a></li>
                 <li><a href="contactez-nous.php">CONTACT</a></li>
                 <?php 
-                    if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true && $_SESSION['admin'] == 0) {
+                    if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true ) {
                         echo '<li><a href="map.php">MAP</a></li>
                               <li class=dropdown><a class=dropbtn>' . ($_SESSION["pseudo"]) . '</a>
                                   <div class="dropdown-content">
-                                      <a href="user.php">Compte</a>
                                       <a href="deco.php">Déconnecter</a>
                                   </div>
                               </li>';

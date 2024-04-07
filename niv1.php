@@ -78,7 +78,7 @@
 
         .dropdown-content a {
         color: black;
-        padding: 12px 16px;
+        padding: 10px 14px;
         text-decoration: none;
         display: block;
         text-align: left;
@@ -95,13 +95,40 @@
         .quiz-container, li{
             color: white;
             list-style-type: none;
+            
+        }
+
+        .form{
+            display: flex;
+            margin: 10px;
+            justify-content: space-around;
+        }
+
+        .question{
+            margin: 1em;
+            font-weight: bold;
+        }
+        #option{
+            margin: 1em;
+        }
+        div.button{
+            display: flex;
+            margin: 0 auto;
+            justify-content: center;
+            padding: 1em;
+        }
+        .button input{
+            padding: 1em;
+        }
+        h2{
+            margin-left: 1em;
         }
     </style>
 </head>
 <body>
     <header class="main-head">
         <nav>
-            <a href="index.php"><img class="logo" align="left" alt="URD" src="LOGO/téléchargement (2).svg"></a>
+        <a href="index.php"><img class="logo" align="left" alt="URD" src="LOGO/téléchargement (2).svg"></a>
             <ul>
                 <li><a href="index.php">ACCUEIL</a></li>
                 <li><a href="leaderboard.php">LEADERBOARD</a></li>
@@ -124,6 +151,7 @@
     <div class="quiz-container">
         <h2>Quiz</h2>
         <form method="post" action="valider_quiz.php">
+            <div class="form">
                 <?php
         // Connexion à la base de données
         $mysqli = new mysqli("localhost", "root", "", "urd");
@@ -134,7 +162,7 @@
         }
 
         // Récupération des questions aléatoires
-        $query_questions = "SELECT * FROM quiz ORDER BY RAND() LIMIT 6";
+        $query_questions = "SELECT * FROM quiz ORDER BY RAND() LIMIT 4";
         $result_questions = $mysqli->query($query_questions);
 
         // Affichage des questions
@@ -144,24 +172,27 @@
             $result_answers = $mysqli->query($query_answers);
             
             // Affichage de la question
-            echo "<div class='question'>";
-            echo "<p><strong>Question:</strong> " . $row['question'] . "</p>";
+            echo "<div>";
+            echo "<div class='question'><strong>Question:</strong> ".$row['question']."</div>";
             
             // Affichage des réponses
             while ($answer = $result_answers->fetch_assoc()) {
-                echo "<input type='radio' name='reponses[" . $row['id'] . "]' value='" . $answer['id'] . "' required>";
+                echo "<input id='option' type='radio' name='reponses[" . $row['id'] . "]' value='" . $answer['id'] . "' required>";
                 echo $answer['reponse'] . "<br>";
             }
             
             echo "</div>";
+
+
         }
 
         // Fermeture de la connexion à la base de données
         $mysqli->close();
         ?>
 
-
-            <input type="submit" value="Submit">
+            </div><br>
+            <div class="button"><input type="submit" value="Submit"></div>
+            
         </form>
     </div>
 </body>
