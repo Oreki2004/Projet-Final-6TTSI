@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : dim. 07 avr. 2024 à 22:44
--- Version du serveur : 8.2.0
--- Version de PHP : 8.2.13
+-- Généré le : lun. 08 avr. 2024 à 12:13
+-- Version du serveur : 8.0.31
+-- Version de PHP : 8.0.26
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -35,14 +35,37 @@ CREATE TABLE IF NOT EXISTS `joueur` (
   `mdp` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `genre` binary(2) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `joueur`
 --
 
 INSERT INTO `joueur` (`id`, `pseudo`, `email`, `mdp`, `genre`) VALUES
-(2, 'Oreki', 'gs10arunmoli@gmail.com', 'arun', 0x0000);
+(2, 'Oreki', 'gs10arunmoli@gmail.com', 'arun', 0x0000),
+(3, 'Maurice', 'mauricelataupe@gmail.com', 'maurice', 0x0000);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `niveau`
+--
+
+DROP TABLE IF EXISTS `niveau`;
+CREATE TABLE IF NOT EXISTS `niveau` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_joueur` int NOT NULL,
+  `niveau` int NOT NULL,
+  `joueur` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `niveau`
+--
+
+INSERT INTO `niveau` (`id`, `id_joueur`, `niveau`, `joueur`) VALUES
+(1, 3, 1, 'Maurice');
 
 -- --------------------------------------------------------
 

@@ -4,11 +4,10 @@
 <head>
 	<title>TorrentGames - Inscription</title>
 	<style>
-		body{	
+		body{
 			background-image: url(IMG/Twilight\ Gap\,\ Last\ City\ Perimeter\ 0.png);
 			background-repeat: no-repeat;
 			background-size: cover;
-
 		}
 		h2{
 			text-align: center;
@@ -17,18 +16,22 @@
 		input,a{
 				margin: 10px;
 		}
-
-		.button{
+		.button {
 			border: none;
-			padding: 10px;
-			margin: 5px;
-			border-radius: 4px;
+			outline: none;
+			background-color: #6c5ce7;
+			padding: 10px 20px;
+			font-size: 12px;
+			font-weight: 700;
+			color: #fff;
+			border-radius: 5px;
+			transition: all ease 0.1s;
+			box-shadow: 0px 5px 0px 0px #a29bfe;
 		}
-		.button:hover{
-			transition-duration: .5s;
-			transform: scale(1.1);
-			color: white;
-			background-color: black;
+
+		.button:active {
+			transform: translateY(5px);
+			box-shadow: 0px 0px 0px 0px #a29bfe;
 		}
 		
 		p{
@@ -60,6 +63,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 20px;
+			
         }
         .logo {
             width: 100px;
@@ -83,6 +87,70 @@
                 margin-bottom: 10px; 
             }
         }
+				input {
+		color: #8707ff;
+		border: 2px solid #8707ff;
+		border-radius: 10px;
+		padding: 10px 25px;
+		background: transparent;
+		max-width: 190px;
+		}
+
+		input:active {
+		box-shadow: 2px 2px 15px #8707ff inset;
+		}
+
+		.content a:hover {
+			text-decoration: underline;
+		}
+		      li a,
+        .dropbtn {
+        display: inline-block;
+        color: black;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        }
+
+        .dropdown li a:hover,
+        .dropdown:hover .dropbtn {
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        transition-duration: 0.6s;
+        }
+
+        li.dropdown {
+        display: inline-block;
+        }
+
+        .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+        
+        }
+
+        .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        margin: 5px;
+        text-decoration: none;
+        display: block;
+        text-align: left;
+        }
+
+        .dropdown-content a:hover {
+        background-color: #f1f1f1;
+        }
+
+        .dropdown:hover .dropdown-content {
+        display: block;
+        
+        }
+
     </style>
 </head>
 <body>
@@ -117,9 +185,9 @@
 		$connexion = mysqli_connect("localhost", "root", "", "urd") or die("La connexion à la base de données a échoué : " . mysqli_connect_error());
 
 		$query = "SELECT MAX(id) FROM joueur";
-		$result = mysqli_query($connexion, $query);
-		$row = mysqli_fetch_array($result);
-		$max_id = $row[0];
+		$resultat = mysqli_query($connexion, $query);
+		$ligne = mysqli_fetch_array($resultat);
+		$max_id = $ligne[0];
 
 		$new_id = $max_id + 1;
 
@@ -129,9 +197,9 @@
 
 		
 		$query = "SELECT * FROM joueur WHERE email='$email'";
-		$result = mysqli_query($connexion, $query);
+		$resultat = mysqli_query($connexion, $query);
 
-		if (mysqli_num_rows($result) > 0) {
+		if (mysqli_num_rows($resultat) > 0) {
 			echo "<p>Cet email est déjà utilisé.</p>";
 		}
 		
@@ -140,6 +208,14 @@
 			$query = "INSERT INTO joueur (id, email, mdp, pseudo) VALUES ('$new_id', '$email', '$mdp', '$pseudo')";
 			if (mysqli_query($connexion, $query)) {
 				echo "<p id=reussi>Inscription réussie.</p>";
+				header( "refresh:3;url=connexion.php" );
+
+			} else {
+				echo "<p>Une erreur s'est produite lors de l'inscription.<p>";
+			}
+			
+			$query2 = "INSERT INTO niveau (id, id_joueur, niveau, joueur) VALUES ('','$new_id', '1', '$pseudo')";
+			if (mysqli_query($connexion, $query2)) {
 				header( "refresh:3;url=connexion.php" );
 
 			} else {

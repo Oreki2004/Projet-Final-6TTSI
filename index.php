@@ -12,7 +12,7 @@
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif; 
-            height: 65em;
+            height: 45em;
         }
         a {
             text-decoration: none;
@@ -100,10 +100,11 @@
             margin-left: 2em;
             border: solid 0.1em black;
             border-radius: 10px;
-            height: 30em;
+            height: 20em;
         }
-        .welcome h1,p{
+        .welcome, .welcome h1,.welcome p{
             margin-left: 1em;
+            max-width: 700px;
         }
     </style>
 </head>
@@ -131,7 +132,7 @@
         </nav>
     </header>
     <div class="welcome">
-        <h1>Bienvenue sur URD - Univers de Destiny 2</h1>
+        <h1>Bienvenue sur URD</h1>
         <p>Découvrez un monde fascinant avec 4 niveaux de jeu inspirés par l'univers de Destiny 2. Préparez-vous à l'action, aux combats épiques et aux défis palpitants qui vous attendent dans notre jeu en ligne.</p>
     </div>
 </body>

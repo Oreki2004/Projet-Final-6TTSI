@@ -130,22 +130,42 @@
         </header>
 
         <div style="position: relative;margin-top:5%;">
-        <img src="img/destiny2_maps_director_s4.jpg" usemap="#image-map">
-
-        <!-- Grayscale Overlays -->
-        <div id="terre" class="grayscale-overlay" style="top: 45%; left: 45%;"></div> <!-- Terre -->
-        <div id="titan" class="grayscale-overlay" style="top: 60%; left: 30%;"></div>  <!-- Titan -->
-        <div id="io" class="grayscale-overlay" style="top: 35%; left: 25%;"></div>  <!-- Io -->
-        <div id="nessos" class="grayscale-overlay" style="top: 30%; left: 75%;"></div>  <!-- Nessos -->
+        <img src="img/destiny2_maps_director_s4.png" usemap="#image-map">
     </div>
 <!-- Image Map généré par http://www.image-map.net/ -->
 
 <map name="image-map">
-    <area id="terre" target="_blank" alt="terre" title="terre" href="niv1.php" coords="615,343,77" shape="circle">
-    <area id="titan" target="_blank" alt="titan" title="titan" href="niv2.php" coords="333,451,37" shape="circle">
-    <area id="io" target="_blank" alt="io" title="io" href="niv3.php" coords="241,200,43" shape="circle">
-    <area id="nessos" target="_blank" alt="nessos" title="nessos" href="niv4.php" coords="815,143,33" shape="circle">
-</map>
+    
+    <?php 
+    $mysqli = new mysqli("localhost", "root", "", "urd");
+
+    if ($mysqli->connect_error) {
+        die("La connexion à la base de données a échoué : " . $mysqli->connect_error);
+    }
+    $id=$_SESSION["id"];
+
+    $query_niveau = "SELECT * FROM niveau where id_joueur='$id' ";
+    $result_niveau = $mysqli->query($query_niveau);
+    while ($ligne = $result_niveau->fetch_assoc()) {
+        if($ligne['niveau']==1){
+            echo'<area id="terre" target="_blank" alt="terre" title="terre" href="niv1.php" coords="615,343,77" shape="circle">';
+        }
+        
+    elseif($ligne['niveau']==2){
+        echo'<area id="titan" target="_blank" alt="titan" title="titan" href="niv2.php" coords="333,451,37" shape="circle">';
+    }
+    elseif($ligne['niveau']==3){
+        echo '<area id="io" target="_blank" alt="io" title="io" href="niv3.php" coords="241,200,43" shape="circle">';
+    }
+    elseif($ligne['niveau']==4){
+        echo '<area id="nessos" target="_blank" alt="nessos" title="nessos" href="niv4.php" coords="815,143,33" shape="circle">';
+    }
+        else{
+            echo "vos données sont corrompus";
+        }
+    
+    
+    }?></map>
 
 </body>
 </html>
