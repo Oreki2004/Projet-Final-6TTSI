@@ -182,12 +182,13 @@ if ($result_select_score) {
                 }
             }
         }
-
         // Insertion du score
-        $query_insert_score = "INSERT INTO score_quiz (joueur, score) VALUES ('$joueur', $score_actuel)";
-        $result_insert_score = $mysqli->query($query_insert_score);
-        if ($result_insert_score) {
+        $query_score = "INSERT INTO score_quiz (joueur, score) VALUES ('$joueur', $score_actuel)";
+        $resultat_score = $mysqli->query($query_score);
+        if ($resultat_score) {
             echo "Score inséré avec succès.";
+            
+
         } else {
             echo "Erreur lors de l'insertion du score : " . $mysqli->error;
         }
@@ -199,6 +200,8 @@ if ($result_select_score) {
 // Fermeture de la connexion à la base de données
 $mysqli->close();
 ?>
+
+<div class="button"><a href="map">Suivant</a></div>
 
 </body>
 </html>

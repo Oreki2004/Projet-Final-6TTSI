@@ -46,12 +46,35 @@
                 margin-bottom: 10px; 
             }
         }
+        li a {
+        color: #fff;
+        line-height: 2;
+        position: relative;
+        font-family: cursive;
+        }
+
+        li a::before {
+        content: '';
+        width: 0;
+        height: 2px;
+        border-radius: 2px;
+        background-color: #fff;
+        position: absolute;
+        bottom: -.25rem;
+        left: 50%;
+        transition: width .4s, left .4s;
+        }
+
+        li a:hover::before {
+        width: 100%;
+        left: 0;
+        }
         li a,
         .dropbtn {
         display: inline-block;
         color: white;
         text-align: center;
-        padding: 14px 16px;
+        padding: 0 16px;
         text-decoration: none;
         }
 

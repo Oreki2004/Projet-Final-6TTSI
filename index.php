@@ -6,13 +6,21 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
         body {
-            background-image: linear-gradient(109.6deg, rgba(102, 51, 153, 1) 11.2%, rgba(2, 0, 4, 1) 91.1%);
+            background-image: url(IMG/Courtyard\,\ Tower\ 1.png);
             background-repeat: no-repeat;
             background-size: cover;
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif; 
-            height: 45em;
+
+        }
+        h1{
+            position: absolute;
+            translate: 0 -40px;
+            
+            height: 5%;
+            background-color: rgba(0, 0, 0, 0.61);
+            backdrop-filter: 10%;
         }
         a {
             text-decoration: none;
@@ -46,20 +54,45 @@
                 margin-bottom: 10px; 
             }
         }
+
+        li a {
+        color: #fff;
+        line-height: 2;
+        position: relative;
+        font-family: cursive;
+        }
+
+        li a::before {
+        content: '';
+        width: 0;
+        height: 2px;
+        border-radius: 2px;
+        background-color: #fff;
+        position: absolute;
+        bottom: -.25rem;
+        left: 50%;
+        transition: width .4s, left .4s;
+        }
+
+        li a:hover::before {
+        width: 100%;
+        left: 0;
+        }
         li a,
         .dropbtn {
         display: inline-block;
         color: white;
         text-align: center;
-        padding: 14px 16px;
+        padding: 0 16px;
         text-decoration: none;
         }
 
         .dropdown li a:hover,
         .dropdown:hover .dropbtn {
-        background-color: rgba(0, 0, 0, 0.5);
-        color: red;
+
+        color: white;
         transition-duration: 0.6s;
+        cursor: pointer;
         }
 
         li.dropdown {
@@ -98,13 +131,28 @@
             color: white;
             margin-top: 50px;
             margin-left: 2em;
-            border: solid 0.1em black;
-            border-radius: 10px;
-            height: 20em;
-        }
-        .welcome, .welcome h1,.welcome p{
             margin-left: 1em;
             max-width: 700px;
+            border: solid 0.1em rgb(130, 54, 236);
+            border-radius: 10px;
+            max-height: 20em;
+            background-color: rgba(0, 0, 0,0.61);
+            backdrop-filter: blur(1px);
+            
+        }
+        legend{
+            font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            font-size: 1.5em;
+        } 
+        .welcome h1,.welcome p{
+            margin-left: 1em;
+            max-width: 700px;
+            font-size: 1.2em;
+        }
+
+        .welcome p {
+            padding: 1.2em 1em;
+            margin: 0 0;
         }
     </style>
 </head>
@@ -131,9 +179,12 @@
             </ul>
         </nav>
     </header>
-    <div class="welcome">
-        <h1>Bienvenue sur URD</h1>
-        <p>Découvrez un monde fascinant avec 4 niveaux de jeu inspirés par l'univers de Destiny 2. Préparez-vous à l'action, aux combats épiques et aux défis palpitants qui vous attendent dans notre jeu en ligne.</p>
-    </div>
+    <fieldset class="welcome">
+        <legend>Bienvenue sur URD</legend>
+        <div>
+        <p>Découvrez un monde fascinant avec 4 niveaux de jeu inspirés par l'univers de Destiny 2. Préparez-vous à l'action, aux combats épiques et aux défis palpitants qui vous attendent dans notre jeu en ligne.
+            Ce Projet est réalisé par Sathiyaseelan Arunmoli élève à Saint-Luc Mons en 6TT SI.
+        </p></div>
+    </fieldset>
 </body>
 </html>
