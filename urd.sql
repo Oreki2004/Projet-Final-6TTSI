@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : lun. 08 avr. 2024 à 12:13
--- Version du serveur : 8.0.31
--- Version de PHP : 8.0.26
+-- Généré le : dim. 12 mai 2024 à 09:49
+-- Version du serveur : 8.2.0
+-- Version de PHP : 8.2.13
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -58,14 +58,15 @@ CREATE TABLE IF NOT EXISTS `niveau` (
   `niveau` int NOT NULL,
   `joueur` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `niveau`
 --
 
 INSERT INTO `niveau` (`id`, `id_joueur`, `niveau`, `joueur`) VALUES
-(1, 3, 1, 'Maurice');
+(1, 3, 1, 'Maurice'),
+(2, 2, 2, 'Oreki');
 
 -- --------------------------------------------------------
 
@@ -132,7 +133,7 @@ INSERT INTO `quiz_reponse` (`id`, `id_question`, `reponse`, `est_correcte`) VALU
 (17, 3, 'Les Vex', 0),
 (18, 3, 'Le Voyageur', 0),
 (19, 3, 'Les Eveillés', 0),
-(20, 4, 'Les Cabals', 0),
+(20, 4, 'Les Eveillés', 0),
 (21, 4, 'La Ruche', 0),
 (22, 4, 'Infâmes', 0),
 (23, 5, 'Les Humains', 0),
@@ -160,14 +161,15 @@ CREATE TABLE IF NOT EXISTS `score_quiz` (
   `joueur` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `score` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `score_quiz`
 --
 
 INSERT INTO `score_quiz` (`id`, `joueur`, `score`) VALUES
-(1, 'Oreki', 4);
+(1, 'Oreki', 4),
+(13, 'Maurice', 0);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
