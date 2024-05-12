@@ -63,7 +63,7 @@ if (isset($_POST['submit'])) {
 
 
 		echo "<p id=reussi>Connecté.</p>";
-		header( "refresh:2;url=index.php" );
+		header( "refresh:2;url=map.php" );
 	} else {
 		echo "<p>Email ou mot de passe incorrect.</p>";
 	}

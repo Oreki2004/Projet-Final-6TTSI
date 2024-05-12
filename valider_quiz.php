@@ -130,6 +130,17 @@ if ($mysqli->connect_error) {
 }
 
 $joueur = $_SESSION['pseudo'];
+if (isset($_POST['reponses'])) {
+            
+    $query_niv = "UPDATE niveau SET niveau ='2' WHERE joueur = '$joueur'";
+    $resultat_niv = $mysqli->query($query_niv);
+    if ($resultat_niv) {
+        echo "Vous avez maintenant accès au Niveau 2.";
+    } else {
+        echo "Erreur lors de la mise à jour du niveau : " . $mysqli->error;
+    }
+}
+
 $query_select_score = "SELECT score FROM score_quiz WHERE joueur = '$joueur'";
 $result_select_score = $mysqli->query($query_select_score);
 
@@ -177,19 +188,6 @@ if ($result_select_score) {
                 }
             }
         }
-        if (isset($_POST['reponses'])) {
-            
-            $query_niv = "UPDATE niveau SET niveau ='2' WHERE joueur = '$joueur'";
-            $resultat_niv = $mysqli->query($query_niv);
-            if ($resultat_niv) {
-                echo "Vous avez maintenant accés au Niveau 2.";
-                
-                
-            } else {
-                echo "Erreur lors de la mise à jour du niveau : " . $mysqli->error;
-            }
-        }
-
 
         $query_score = "INSERT INTO score_quiz (joueur, score) VALUES ('$joueur', $score_actuel)";
         $resultat_score = $mysqli->query($query_score);

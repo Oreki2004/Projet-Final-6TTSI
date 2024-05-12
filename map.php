@@ -11,11 +11,8 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
         body {
-            background-color: black;
-            background-repeat: no-repeat;
-            background-size: cover;
-            margin: 0;
-            padding: 0;
+            background: rgb(0,0,0);
+            background: radial-gradient(circle, rgba(0,0,0,1) 75%, rgba(85,85,85,1) 100%);
             font-family: Arial, sans-serif; 
         }
         a {
