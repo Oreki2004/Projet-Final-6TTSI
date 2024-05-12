@@ -113,7 +113,6 @@
 
         .dropdown:hover .dropdown-content {
         display: block;
-        
         }
     </style>
 </head>

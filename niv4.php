@@ -6,11 +6,10 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
         body {
-            background-image: linear-gradient(109.6deg, rgba(102, 51, 153, 1) 11.2%, rgba(2, 0, 4, 1) 91.1%);
+            background-image: url('./IMG/The\ Tor\,\ Nessus\ 2.png');
             background-repeat: no-repeat;
             background-size: cover;
-            margin: 0;
-            padding: 0;
+
             font-family: Arial, sans-serif; 
         }
         a {

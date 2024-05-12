@@ -6,12 +6,10 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
         body {
-            background-image: linear-gradient(109.6deg, rgba(102, 51, 153, 1) 11.2%, rgba(2, 0, 4, 1) 91.1%);
+            background-image: url('IMG/Courtyard\,\ Tower\ 19.png');
             background-repeat: no-repeat;
             background-size: cover;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif; 
+            font-family: Arial, sans-serif;
         }
         a {
             text-decoration: none;
@@ -189,18 +187,18 @@
         $result_questions = $mysqli->query($query_questions);
 
         // Affichage des questions
-        while ($row = $result_questions->fetch_assoc()) {
+        while ($ligne = $result_questions->fetch_assoc()) {
             // Récupération des réponses pour cette question
-            $query_answers = "SELECT * FROM quiz_reponse WHERE id_question = " . $row['id'] . " ORDER BY RAND()";
+            $query_answers = "SELECT * FROM quiz_reponse WHERE id_question = " . $ligne['id'] . " ORDER BY RAND()";
             $result_answers = $mysqli->query($query_answers);
             
             // Affichage de la question
             echo "<div>";
-            echo "<div class='question'><strong>Question:</strong> ".$row['question']."</div>";
+            echo "<div class='question'><strong>Question:</strong> ".$ligne['question']."</div>";
             
             // Affichage des réponses
             while ($answer = $result_answers->fetch_assoc()) {
-                echo "<input id='option' type='radio' name='reponses[" . $row['id'] . "]' value='" . $answer['id'] . "' required>";
+                echo "<input id='option' type='radio' name='reponses[" . $ligne['id'] . "]' value='" . $answer['id'] . "' required>";
                 echo $answer['reponse'] . "<br>";
             }
             

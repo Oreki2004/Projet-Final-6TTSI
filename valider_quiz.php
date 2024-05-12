@@ -133,30 +133,30 @@ $joueur = $_SESSION['pseudo'];
 if (isset($_POST['reponses'])) {
             
     $query_niv = "UPDATE niveau SET niveau ='2' WHERE joueur = '$joueur'";
-    $resultat_niv = $mysqli->query($query_niv);
-    if ($resultat_niv) {
+    $resultatat_niv = $mysqli->query($query_niv);
+    if ($resultatat_niv) {
         echo "Vous avez maintenant accès au Niveau 2.";
     } else {
         echo "Erreur lors de la mise à jour du niveau : " . $mysqli->error;
     }
 }
 
-$query_select_score = "SELECT score FROM score_quiz WHERE joueur = '$joueur'";
-$result_select_score = $mysqli->query($query_select_score);
+$query_score = "SELECT score FROM score_quiz WHERE joueur = '$joueur'";
+$resultat_score = $mysqli->query($query_score);
 
-if ($result_select_score) {
-    if ($result_select_score->num_rows > 0) {
-        $row = $result_select_score->fetch_assoc();
-        $score_joueur = $row['score'];
+if ($resultat_score) {
+    if ($resultat_score->num_rows> 0) {
+        $ligne = $resultat_score->fetch_assoc();
+        $score_joueur = $ligne['score'];
 
         $score_actuel = 0;
         $reponses_utilisateur = isset($_POST['reponses']) ? $_POST['reponses'] : array();
         foreach ($reponses_utilisateur as $id_question => $reponse_utilisateur) {
             $query = "SELECT est_correcte FROM quiz_reponse WHERE id = $reponse_utilisateur";
-            $result = $mysqli->query($query);
-            if ($result) {
-                $row = $result->fetch_assoc();
-                if ($row['est_correcte']) {
+            $resultat = $mysqli->query($query);
+            if ($resultat) {
+                $ligne = $resultat->fetch_assoc();
+                if ($ligne['est_correcte']) {
                     $score_actuel++;
                 }
             }
@@ -165,8 +165,8 @@ if ($result_select_score) {
 
         if ($score_actuel > $score_joueur) {
             $query_update_score = "UPDATE score_quiz SET score = $score_actuel WHERE joueur = '$joueur'";
-            $result_update_score = $mysqli->query($query_update_score);
-            if ($result_update_score) {
+            $resultat_update_score = $mysqli->query($query_update_score);
+            if ($resultat_update_score) {
                 echo "Ton score actuel est de ".$score_actuel;
             } else {
                 echo "Erreur lors de la mise à jour du score : " . $mysqli->error;
@@ -180,10 +180,10 @@ if ($result_select_score) {
         $reponses_utilisateur = isset($_POST['reponses']) ? $_POST['reponses'] : array();
         foreach ($reponses_utilisateur as $id_question => $reponse_utilisateur) {
             $query = "SELECT est_correcte FROM quiz_reponse WHERE id = $reponse_utilisateur";
-            $result = $mysqli->query($query);
-            if ($result) {
-                $row = $result->fetch_assoc();
-                if ($row['est_correcte']) {
+            $resultat = $mysqli->query($query);
+            if ($resultat) {
+                $ligne = $resultat->fetch_assoc();
+                if ($ligne['est_correcte']) {
                     $score_actuel++;
                 }
             }
