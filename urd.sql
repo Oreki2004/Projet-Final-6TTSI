@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : dim. 12 mai 2024 à 23:36
--- Version du serveur : 8.2.0
--- Version de PHP : 8.2.13
+-- Généré le : mer. 22 mai 2024 à 23:21
+-- Version du serveur : 8.0.31
+-- Version de PHP : 8.0.26
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,6 +24,48 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `guesser`
+--
+
+DROP TABLE IF EXISTS `guesser`;
+CREATE TABLE IF NOT EXISTS `guesser` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nom` varchar(255) NOT NULL,
+  `img` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `guesser`
+--
+
+INSERT INTO `guesser` (`id`, `nom`, `img`) VALUES
+(1, 'Cité des rêves', 'Dreaming City.png');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `guesser_score`
+--
+
+DROP TABLE IF EXISTS `guesser_score`;
+CREATE TABLE IF NOT EXISTS `guesser_score` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `joueur` varchar(255) NOT NULL,
+  `score` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `guesser_score`
+--
+
+INSERT INTO `guesser_score` (`id`, `joueur`, `score`) VALUES
+(1, 'Oreki', 10);
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `jeu_paires`
 --
 
@@ -31,7 +73,7 @@ DROP TABLE IF EXISTS `jeu_paires`;
 CREATE TABLE IF NOT EXISTS `jeu_paires` (
   `id` int NOT NULL AUTO_INCREMENT,
   `pseudo` varchar(255) NOT NULL,
-  `temps` int NOT NULL,
+  `score` int NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -39,8 +81,8 @@ CREATE TABLE IF NOT EXISTS `jeu_paires` (
 -- Déchargement des données de la table `jeu_paires`
 --
 
-INSERT INTO `jeu_paires` (`id`, `pseudo`, `temps`) VALUES
-(1, 'Oreki', 0);
+INSERT INTO `jeu_paires` (`id`, `pseudo`, `score`) VALUES
+(1, 'Oreki', 10);
 
 -- --------------------------------------------------------
 
@@ -78,7 +120,7 @@ CREATE TABLE IF NOT EXISTS `niveau` (
   `niveau` int NOT NULL,
   `joueur` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `niveau`
@@ -86,7 +128,7 @@ CREATE TABLE IF NOT EXISTS `niveau` (
 
 INSERT INTO `niveau` (`id`, `id_joueur`, `niveau`, `joueur`) VALUES
 (1, 3, 1, 'Maurice'),
-(2, 2, 4, 'Oreki');
+(2, 2, 1, 'Oreki');
 
 -- --------------------------------------------------------
 
@@ -189,7 +231,7 @@ CREATE TABLE IF NOT EXISTS `score_quiz` (
 
 INSERT INTO `score_quiz` (`id`, `joueur`, `score`) VALUES
 (1, 'Oreki', 4),
-(2, 'Maurice', 0);
+(13, 'Maurice', 0);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
