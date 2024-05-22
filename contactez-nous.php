@@ -147,7 +147,6 @@
                         echo '<li><a href="map.php">MAP</a></li>
                               <li class=dropdown><a class=dropbtn>' . ($_SESSION["pseudo"]) . '</a>
                                   <div class="dropdown-content">
-                                      <a href="user.php">Compte</a>
                                       <a href="deco.php">Déconnecter</a>
                                   </div>
                               </li>';
@@ -163,7 +162,10 @@
         <legend>Contact</legend>
         <div>
             <p>
+            Si vous avez une quelconque problème sur le site, vous pouvez nous contacter en rejoignant notre serveur Discord. Sur demande, nous l'examinerons et le corrigerons immédiatement.
+Merci d'avoir lu.
 
+<br><br>Serveur Discord: <a href="https://discord.gg/wDx8p8RYRK">https://discord.gg/wDx8p8RYRK</a>
             </p>
         </div>
         

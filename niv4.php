@@ -1,15 +1,42 @@
 <!DOCTYPE html>
-<?php session_start() ?>
+<?php session_start(); 
+
+$conn = new mysqli("localhost", "root","" , "urd");
+
+// Vérifier la connexion
+if ($conn->connect_error) {
+    die("Connexion échouée: " . $conn->connect_error);
+}
+
+// Récupérer le chemin de l'image depuis la base de données
+$sql = "SELECT img FROM guesser ORDER BY RAND() LIMIT 1"; // Sélectionne un chemin d'image aléatoire
+$result = $conn->query($sql);
+
+// Vérifier s'il y a des erreurs dans la requête SQL
+if (!$result) {
+    printf("Erreur : %s\n", $conn->error);
+    exit();
+}
+
+// Vérifier si des résultats ont été retournés
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $image = $row['img'];
+} else {
+    $image = ""; // Chemin par défaut si aucune image n'est trouvée
+}
+
+?>
+?>
 <html>
 <head>
-    <title>URD - NIVEAU 4</title>
+<title>URD - NIVEAU 4</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
         body {
             background-image: url('./IMG/The\ Tor\,\ Nessus\ 2.png');
             background-repeat: no-repeat;
             background-size: cover;
-
             font-family: Arial, sans-serif; 
         }
         a {
@@ -139,5 +166,15 @@
             </ul>
         </nav>
     </header>
+    <section class="game-section">
+        <h2>Devinez l'endroit</h2>
+        <img src="./guess_img/<?php echo $image; ?>" alt="Image à deviner">
+
+        <form action="valider_guesser.php" method="post">
+            <label for="guess">Votre devinette:</label>
+            <input type="text" id="guess" name="guess">
+            <button type="submit">Valider</button>
+        </form>
+    </section>
 </body>
 </html>

@@ -18,6 +18,14 @@
             font-family: Arial, sans-serif; 
             height: 65em;
         }
+        h1{
+            position: absolute;
+            translate: 0 -40px;
+            
+            height: 5%;
+            background-color: rgba(0, 0, 0, 0.61);
+            backdrop-filter: 10%;
+        }
         a {
             text-decoration: none;
             color: white; 
@@ -50,20 +58,45 @@
                 margin-bottom: 10px; 
             }
         }
+
+        li a {
+        color: #fff;
+        line-height: 2;
+        position: relative;
+        font-family: cursive;
+        }
+
+        li a::before {
+        content: '';
+        width: 0;
+        height: 2px;
+        border-radius: 2px;
+        background-color: #fff;
+        position: absolute;
+        bottom: -.25rem;
+        left: 50%;
+        transition: width .4s, left .4s;
+        }
+
+        li a:hover::before {
+        width: 100%;
+        left: 0;
+        }
         li a,
         .dropbtn {
         display: inline-block;
         color: white;
         text-align: center;
-        padding: 14px 16px;
+        padding: 0 16px;
         text-decoration: none;
         }
 
         .dropdown li a:hover,
         .dropdown:hover .dropbtn {
-        background-color: rgba(0, 0, 0, 0.5);
-        color: red;
+
+        color: white;
         transition-duration: 0.6s;
+        cursor: pointer;
         }
 
         li.dropdown {
@@ -121,89 +154,7 @@
             </ul>
         </nav>
     </header>
-    <?php
-
-$mysqli = new mysqli("localhost", "root", "", "urd");
-
-if ($mysqli->connect_error) {
-    die("La connexion à la base de données a échoué : " . $mysqli->connect_error);
-}
-
-$joueur = $_SESSION['pseudo'];
-if (isset($_POST['reponses'])) {
-            
-    $query_niv = "UPDATE niveau SET niveau ='2' WHERE joueur = '$joueur'";
-    $resultatat_niv = $mysqli->query($query_niv);
-    if ($resultatat_niv) {
-        echo "Vous avez maintenant accès au Niveau 2.";
-    } else {
-        echo "Erreur lors de la mise à jour du niveau : " . $mysqli->error;
-    }
-}
-
-$query_score = "SELECT score FROM score_quiz WHERE joueur = '$joueur'";
-$resultat_score = $mysqli->query($query_score);
-
-if ($resultat_score) {
-    if ($resultat_score->num_rows> 0) {
-        $ligne = $resultat_score->fetch_assoc();
-        $score_joueur = $ligne['score'];
-
-        $score_actuel = 0;
-        $reponses_utilisateur = isset($_POST['reponses']) ? $_POST['reponses'] : array();
-        foreach ($reponses_utilisateur as $id_question => $reponse_utilisateur) {
-            $query = "SELECT est_correcte FROM quiz_reponse WHERE id = $reponse_utilisateur";
-            $resultat = $mysqli->query($query);
-            if ($resultat) {
-                $ligne = $resultat->fetch_assoc();
-                if ($ligne['est_correcte']) {
-                    $score_actuel++;
-                }
-            }
-        }
-
-
-        if ($score_actuel > $score_joueur) {
-            $query_update_score = "UPDATE score_quiz SET score = $score_actuel WHERE joueur = '$joueur'";
-            $resultat_update_score = $mysqli->query($query_update_score);
-            if ($resultat_update_score) {
-                echo "Ton score actuel est de ".$score_actuel;
-            } else {
-                echo "Erreur lors de la mise à jour du score : " . $mysqli->error;
-            }
-        } else {
-            echo "Ton score actuel est de ".$score_actuel.", tu peux faire mieux.";
-        }
-    } else {
-
-        $score_actuel = 0;
-        $reponses_utilisateur = isset($_POST['reponses']) ? $_POST['reponses'] : array();
-        foreach ($reponses_utilisateur as $id_question => $reponse_utilisateur) {
-            $query = "SELECT est_correcte FROM quiz_reponse WHERE id = $reponse_utilisateur";
-            $resultat = $mysqli->query($query);
-            if ($resultat) {
-                $ligne = $resultat->fetch_assoc();
-                if ($ligne['est_correcte']) {
-                    $score_actuel++;
-                }
-            }
-        }
-
-        $query_score = "INSERT INTO score_quiz (joueur, score) VALUES ('$joueur', $score_actuel)";
-        $resultat_score = $mysqli->query($query_score);
-        if ($resultat_score) {
-            echo "Score inséré avec succès.";
-            
-        } else {
-            echo "Erreur lors de l'insertion du score : " . $mysqli->error;
-        }
-    }
-} else {
-    echo "Erreur lors de la récupération du score : " . $mysqli->error;
-}
-
-$mysqli->close();
-?>
+   
 
 <div class="button"><a href="map">Suivant</a></div>
 
