@@ -1,5 +1,7 @@
+<?php session_start(); 
+
+?>
 <!DOCTYPE html>
-<?php session_start(); ?>
 <html>
 <head>
     <title>URD - ACCUEIL</title>
@@ -143,70 +145,75 @@
     </header>
 
     <?php
-    // Connexion à la base de données
-    $conn = new mysqli("localhost", "root", "", "urd");
 
-    // Vérifier la connexion
-    if ($conn->connect_error) {
-        die("Connexion échouée: " . $conn->connect_error);
-    }
+$conn = new mysqli("localhost", "root", "", "urd");
 
-    // Récupérer l'identifiant du joueur depuis la session
-    if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
-        $id = $_SESSION['id'];
-        $pseudo = $_SESSION['pseudo'];
+if ($conn->connect_error) {
+    die("Connexion échouée: " . $conn->connect_error);
+}
 
-        // Vérifier si une réponse a été soumise
-        if (isset($_POST['guess'])) {
-            $guess = strtolower(trim($_POST['guess']));  // Nettoyer l'entrée de l'utilisateur
+if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
+    $pseudo = $_SESSION['pseudo'];
+    $id = $_SESSION['id'];
+    $attempts = isset($_POST['attempts']) ? (int)$_POST['attempts'] : 3;
 
-            // Récupérer le nom de l'image depuis la base de données
-            $sql = "SELECT nom FROM guesser ORDER BY RAND() LIMIT 1";  // Sélectionne un chemin d'image aléatoire
-            $result = $conn->query($sql);
-            if ($result->num_rows > 0) {
-                $row = $result->fetch_assoc();
-                $image_name = strtolower($row['nom']);
+    if (isset($_POST['guess']) && isset($_POST['img'])) {
+        $guess = strtolower(trim($_POST['guess']));
+        $img = $_POST['img'];
 
-                // Comparer la réponse soumise avec le nom de l'image
-                if ($guess == $image_name) {
-                    // Le joueur a deviné correctement
-                    echo "Félicitations ! Vous avez deviné correctement.";
+        $sql = "SELECT nom FROM guesser WHERE img = '$img'";
+        $result = $conn->query($sql);
 
-                    // Mettre à jour le niveau du joueur dans la table niveaux
-                    $level = 1; // Nouveau niveau du joueur
-                    $sql_update = "UPDATE niveau SET niveau = '$level' WHERE id_joueur = '$id'";
-                    if ($conn->query($sql_update) === TRUE) {
-                        echo " Niveau mis à jour avec succès.";
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $correct_name = strtolower($row['nom']);
+
+            if (mb_strtolower($guess, 'UTF-8') == mb_strtolower($correct_name, 'UTF-8')) {
+                echo "Félicitations ! Vous avez deviné correctement.";
+                echo "<br><a href='map.php'>Suivant</a>";
+            
+                $score = 10;
+                $sql_check_score = "SELECT * FROM guesser_score WHERE joueur = '$pseudo'";
+                $result_check_score = $conn->query($sql_check_score);
+            
+                if ($result_check_score->num_rows > 0) {
+                    $sql_update_score = "UPDATE guesser_score SET score = score + $score WHERE joueur = '$pseudo'";
+                    if ($conn->query($sql_update_score) === TRUE) {
+                        echo " Score mis à jour avec succès.";
                     } else {
-                        echo " Erreur lors de la mise à jour du niveau: " . $conn->error;
+                        echo " Erreur lors de la mise à jour du score: " . $conn->error;
                     }
-
-                    // Ajouter le score du joueur dans la table guesser_score
-                    $score = 10; // Exemple de score, vous pouvez adapter cette valeur
-                    $sql_score = "INSERT INTO guesser_score (id,joueur, score) VALUES ('','$pseudo', '$score')";
-                    if ($conn->query($sql_score) === TRUE) {
+                } else {
+                    $sql_insert_score = "INSERT INTO guesser_score (id, joueur, score) VALUES ('', '$pseudo', '$score')";
+                    if ($conn->query($sql_insert_score) === TRUE) {
                         echo " Score ajouté avec succès.";
                     } else {
                         echo " Erreur lors de l'ajout du score: " . $conn->error;
                     }
-                } else {
-                    // Le joueur a deviné incorrectement
-                    echo "Désolé, votre réponse est incorrecte. Veuillez réessayer.";
                 }
             } else {
-                echo "Aucune image trouvée dans la base de données.";
+
+                if ($_SESSION['attempts']-- > 0) {
+                    echo "Désolé, votre réponse est incorrecte. Vous avez encore $attempts tentatives.";
+                    echo "<br><a href='niv4.php'>Réessayer</a>";
+                } else {
+                    echo "Désolé, votre réponse est incorrecte. Vous n'avez plus de tentatives.";
+                    echo "<br><a href='map.php'>Suivant</a>";
+                }
             }
         } else {
-            echo "Veuillez soumettre une réponse.";
+            echo "Aucune image trouvée pour la devinette fournie.";
         }
     } else {
-        echo "Vous devez être connecté pour jouer.";
+        echo "Veuillez soumettre une réponse.";
     }
+} else {
+    echo "Vous devez être connecté pour jouer.";
+}
 
-    // Fermer la connexion
-    $conn->close();
-    ?>
 
-    <div class="button"><a href="map">Suivant</a></div>
+$conn->close();
+?>
+
 </body>
 </html>

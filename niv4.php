@@ -1,33 +1,35 @@
-<!DOCTYPE html>
 <?php session_start(); 
 
-$conn = new mysqli("localhost", "root","" , "urd");
+$conn = new mysqli("localhost", "root", "", "urd");
 
-// Vérifier la connexion
+
 if ($conn->connect_error) {
     die("Connexion échouée: " . $conn->connect_error);
 }
 
-// Récupérer le chemin de l'image depuis la base de données
-$sql = "SELECT img FROM guesser ORDER BY RAND() LIMIT 1"; // Sélectionne un chemin d'image aléatoire
+$sql = "SELECT img FROM guesser ORDER BY RAND() LIMIT 1";
 $result = $conn->query($sql);
 
-// Vérifier s'il y a des erreurs dans la requête SQL
+
 if (!$result) {
     printf("Erreur : %s\n", $conn->error);
     exit();
 }
 
-// Vérifier si des résultats ont été retournés
+
 if ($result->num_rows > 0) {
     $row = $result->fetch_assoc();
     $image = $row['img'];
 } else {
-    $image = ""; // Chemin par défaut si aucune image n'est trouvée
+    $image = ""; 
 }
 
+if (!isset($_SESSION['attempts'])) {
+    $_SESSION['attempts'] = 3;
+}
 ?>
-?>
+
+<!DOCTYPE html>
 <html>
 <head>
 <title>URD - NIVEAU 4</title>
@@ -141,6 +143,74 @@ if ($result->num_rows > 0) {
         display: block;
         
         }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+        }
+
+        img {
+            max-width: 800px;
+            margin: 20px 0;
+        }
+
+        h2, form {
+            text-align: center;
+        }
+        .button {
+    border: none;
+    outline: none;
+    background-color: #6c5ce7;
+    padding: 10px 20px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    border-radius: 5px;
+    transition: all ease 0.1s;
+    box-shadow: 0px 5px 0px 0px #a29bfe;
+    cursor: pointer;
+    }
+
+    .button:active {
+        transform: translateY(5px);
+        box-shadow: 0px 0px 0px 0px #a29bfe;
+    }
+    .input-group {
+ position: relative;
+    }
+
+    .input {
+    border: solid 1.5px #9e9e9e;
+    border-radius: 1rem;
+    background: none;
+    padding: 1rem;
+    font-size: 1rem;
+    color: #f5f5f5;
+    transition: border 150ms cubic-bezier(0.4,0,0.2,1);
+    }
+
+    .user-label {
+    position: absolute;
+    left: 15px;
+    color: #e8e8e8;
+    pointer-events: none;
+    transform: translateY(1rem);
+    transition: 150ms cubic-bezier(0.4,0,0.2,1);
+    }
+
+    .input:focus, input:valid {
+    outline: none;
+    border: 1.5px solid #1a73e8;
+    }
+
+    .input:focus ~ label, input:valid ~ label {
+    transform: translateY(-50%) scale(0.8);
+        background-color: #1a73e8;
+    padding: 0 .2em;
+    color: white;
+    }
     </style>
 </head>
 <body>
@@ -166,15 +236,20 @@ if ($result->num_rows > 0) {
             </ul>
         </nav>
     </header>
-    <section class="game-section">
+    
+    <div class="container">
         <h2>Devinez l'endroit</h2>
         <img src="./guess_img/<?php echo $image; ?>" alt="Image à deviner">
 
         <form action="valider_guesser.php" method="post">
-            <label for="guess">Votre devinette:</label>
-            <input type="text" id="guess" name="guess">
-            <button type="submit">Valider</button>
+            <div class="input-group">
+            <input required="" id=guess type="text" name="guess" autocomplete="off" class="input">
+            <label class="user-label">Réponse</label>
+            </div><br>
+            <input type="hidden" name="img" value="<?php echo $image; ?>">
+            <input type="hidden" name="attempts" value="<?php echo $_SESSION['attempts']; ?>">
+            <button class="button" type="submit">Valider</button>
         </form>
-    </section>
+    </div>
 </body>
 </html>

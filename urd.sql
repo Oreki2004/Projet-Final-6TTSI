@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : mer. 22 mai 2024 à 23:21
+-- Généré le : jeu. 06 juin 2024 à 01:24
 -- Version du serveur : 8.0.31
 -- Version de PHP : 8.0.26
 
@@ -54,14 +54,14 @@ CREATE TABLE IF NOT EXISTS `guesser_score` (
   `joueur` varchar(255) NOT NULL,
   `score` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `guesser_score`
 --
 
 INSERT INTO `guesser_score` (`id`, `joueur`, `score`) VALUES
-(1, 'Oreki', 10);
+(1, 'Oreki', 70);
 
 -- --------------------------------------------------------
 
@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS `jeu_paires` (
 --
 
 INSERT INTO `jeu_paires` (`id`, `pseudo`, `score`) VALUES
-(1, 'Oreki', 10);
+(1, 'Oreki', 0);
 
 -- --------------------------------------------------------
 
@@ -128,7 +128,56 @@ CREATE TABLE IF NOT EXISTS `niveau` (
 
 INSERT INTO `niveau` (`id`, `id_joueur`, `niveau`, `joueur`) VALUES
 (1, 3, 1, 'Maurice'),
-(2, 2, 1, 'Oreki');
+(2, 2, 3, 'Oreki');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `perso_combat`
+--
+
+DROP TABLE IF EXISTS `perso_combat`;
+CREATE TABLE IF NOT EXISTS `perso_combat` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nom` varchar(255) NOT NULL,
+  `force` int NOT NULL,
+  `vie` int NOT NULL,
+  `img` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `perso_combat`
+--
+
+INSERT INTO `perso_combat` (`id`, `nom`, `force`, `vie`, `img`) VALUES
+(1, 'Rebut', 10, 50, 'Rebut.webp'),
+(2, 'Cabal', 20, 100, 'Cabal.webp');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `perso_joueur`
+--
+
+DROP TABLE IF EXISTS `perso_joueur`;
+CREATE TABLE IF NOT EXISTS `perso_joueur` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nom` varchar(255) NOT NULL,
+  `force` int NOT NULL,
+  `vie` int NOT NULL,
+  `img` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `perso_joueur`
+--
+
+INSERT INTO `perso_joueur` (`id`, `nom`, `force`, `vie`, `img`) VALUES
+(1, 'Chasseur', 20, 60, 'chasseur.webp'),
+(2, 'Titan', 30, 80, 'titan.png'),
+(3, 'Arcaniste', 25, 70, 'arcaniste.png');
 
 -- --------------------------------------------------------
 
@@ -214,6 +263,27 @@ INSERT INTO `quiz_reponse` (`id`, `id_question`, `reponse`, `est_correcte`) VALU
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `score_combat`
+--
+
+DROP TABLE IF EXISTS `score_combat`;
+CREATE TABLE IF NOT EXISTS `score_combat` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `joueur` varchar(255) NOT NULL,
+  `score` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `score_combat`
+--
+
+INSERT INTO `score_combat` (`id`, `joueur`, `score`) VALUES
+(1, 'Oreki', 70);
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `score_quiz`
 --
 
@@ -231,7 +301,7 @@ CREATE TABLE IF NOT EXISTS `score_quiz` (
 
 INSERT INTO `score_quiz` (`id`, `joueur`, `score`) VALUES
 (1, 'Oreki', 4),
-(13, 'Maurice', 0);
+(2, 'Maurice', 1);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

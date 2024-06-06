@@ -1,122 +1,12 @@
-<!DOCTYPE html>
 <?php session_start() ?>
+<!DOCTYPE html>
 <html>
 <head>
     <title>URD - COMBAT</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
-        body {
-            background-image: linear-gradient(109.6deg, rgba(102, 51, 153, 1) 11.2%, rgba(2, 0, 4, 1) 91.1%);
-            background-repeat: no-repeat;
-            background-size: cover;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif; 
-        }
-        a {
-            text-decoration: none;
-            color: white; 
-        }
-        header nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-        }
-        .logo {
-            width: 100px;
-        }
-        nav ul {
-            display: flex;
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-        }
-        nav ul li {
-            margin-right: 20px;
-        }
-        /* Responsive Styles */
-        @media screen and (max-width: 768px) {
-            nav ul {
-                flex-direction: column;
-                padding-left: 0;
-            }
-            nav ul li {
-                margin-right: 0; 
-                margin-bottom: 10px; 
-            }
-        }
-        li a {
-        color: #fff;
-        line-height: 2;
-        position: relative;
-        font-family: cursive;
-        }
-
-        li a::before {
-        content: '';
-        width: 0;
-        height: 2px;
-        border-radius: 2px;
-        background-color: #fff;
-        position: absolute;
-        bottom: -.25rem;
-        left: 50%;
-        transition: width .4s, left .4s;
-        }
-
-        li a:hover::before {
-        width: 100%;
-        left: 0;
-        }
-        li a,
-        .dropbtn {
-        display: inline-block;
-        color: white;
-        text-align: center;
-        padding: 0 16px;
-        text-decoration: none;
-        }
-
-        .dropdown li a:hover,
-        .dropdown:hover .dropbtn {
-        background-color: rgba(0, 0, 0, 0.5);
-        color: red;
-        transition-duration: 0.6s;
-        }
-
-        li.dropdown {
-        display: inline-block;
-        }
-
-        .dropdown-content {
-        display: none;
-        position: absolute;
-        background-color: #f9f9f9;
-        min-width: 160px;
-        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-        z-index: 1;
-        
-        }
-
-        .dropdown-content a {
-        color: black;
-        padding: 12px 16px;
-        text-decoration: none;
-        display: block;
-        text-align: left;
-        }
-
-        .dropdown-content a:hover {
-        background-color: #f1f1f1;
-        }
-
-        .dropdown:hover .dropdown-content {
-        display: block;
-        }
-    </style>
+    <link rel="stylesheet" href="css/niv2.css">
 </head>
 <body>
+    <div class="body">
     <header class="main-head">
         <nav>
             <a href="index.php"><img class="logo" align="left" alt="URD" src="LOGO/téléchargement (2).svg"></a>
@@ -139,5 +29,200 @@
             </ul>
         </nav>
     </header>
+    <?php
+// Connexion à la base de données
+$connexion = mysqli_connect("localhost", "root", "", "urd");
+
+if (!$connexion) {
+    die("La connexion à la base de données a échoué : " . mysqli_connect_error());
+}
+
+// Définition des classes de personnages
+class Personnage
+{
+    protected $nom;
+    protected $force;
+    protected $vie;
+    protected $img;
+
+    // Constructeur
+    public function __construct($nom, $force, $vie, $img)
+    {
+        $this->nom = $nom;
+        $this->force = $force;
+        $this->vie = $vie;
+        $this->img = $img;
+    }
+
+    // Méthode pour vérifier si le personnage est vivant
+    public function estVivant()
+    {
+        return $this->vie > 0;
+    }
+
+    // Méthode pour infliger des dégâts à un autre personnage
+    public function attaquer(Personnage $ennemi)
+    {
+        $degats = $this->force;
+        $ennemi->recevoirDegats($degats);
+        return $degats;
+    }
+
+    // Méthode pour recevoir des dégâts
+    public function recevoirDegats($degats)
+    {
+        $this->vie = max(0, $this->vie - $degats);
+    }
+
+    // Méthodes pour récupérer les informations du personnage
+    public function getNom()
+    {
+        return $this->nom;
+    }
+
+    public function getForce()
+    {
+        return $this->force;
+    }
+
+    public function getVie()
+    {
+        return $this->vie;
+    }
+
+    public function getImg()
+    {
+        return $this->img;
+    }
+}
+
+class Titan extends Personnage
+{
+    // Marteau
+}
+
+class Arcaniste extends Personnage
+{
+    // Bombe Nova
+}
+
+class Chasseur extends Personnage
+{
+    // Lames
+}
+
+$requeteJoueur = "SELECT *, 'Chasseur' AS classe FROM perso_joueur"; 
+$resultatJoueur = mysqli_query($connexion, $requeteJoueur);
+
+if (!$resultatJoueur) {
+    die("Erreur lors de la récupération des personnages du joueur : " . mysqli_error($connexion));
+}
+
+
+$personnagesJoueur = [];
+while ($row = mysqli_fetch_assoc($resultatJoueur
+)) {
+    $personnagesJoueur[] = new $row['classe']($row['nom'], $row['force'], $row['vie'], $row['img']);
+}
+?>
+
+<div class="container">
+    <h1>Choisissez votre personnage</h1>
+    <div class="select-character">
+        <form method="POST">
+            <select name="selected_character">
+                <?php
+                foreach ($personnagesJoueur as $personnage) {
+                    echo "<option value='" . $personnage->getNom() . "'>" . $personnage->getNom() . "</option>";
+                }
+                ?>
+            </select>
+            <input type="submit" name="submit" value="Commencer le combat">
+        </form>
+    </div>
+</div>
+
+<?php
+if (isset($_POST['submit'])) {
+    $selectedCharacterName = $_POST['selected_character'];
+    $selectedCharacter = null;
+    foreach ($personnagesJoueur as $personnage) {
+        if ($personnage->getNom() === $selectedCharacterName) {
+            $selectedCharacter = $personnage;
+            break;
+        }
+    }
+
+    if ($selectedCharacter) {
+        $requeteEnnemis = "SELECT * FROM perso_combat ORDER BY RAND() LIMIT 1"; 
+        $resultatEnnemis = mysqli_query($connexion, $requeteEnnemis);
+
+        if (!$resultatEnnemis) {
+            die("Erreur lors de la récupération des ennemis : " . mysqli_error($connexion));
+        }
+
+        $ennemi = mysqli_fetch_assoc($resultatEnnemis);
+        $ennemi = new Personnage($ennemi['nom'], $ennemi['force'], $ennemi['vie'], $ennemi['img']);
+        $nombreDeManches = 0;
+        if ($ennemi) {
+            echo "<div class='combat-container'>";
+            echo "<div class='combatant'><img src='img_combat/" . $selectedCharacter->getImg() . "' alt=''></div>";
+            echo "<div class='versus'><img src=img_combat/VS></div>";
+            echo "<div class='combatant'><img src='img_combat/" . $ennemi->getImg() . "' alt=''></div>";
+            echo "</div><div class='log'>";
+
+            // Déroulement du combat
+            while ($selectedCharacter->estVivant() && $ennemi->estVivant()) {
+                $degatsInfliges = $selectedCharacter->attaquer($ennemi);
+                echo "<p>" . $selectedCharacter->getNom() . " inflige $degatsInfliges dégâts à " . $ennemi->getNom() . "</p>";
+                if ($ennemi->estVivant()) {
+                    $degatsInfliges = $ennemi->attaquer($selectedCharacter);
+                    echo "<p>" . $ennemi->getNom() . " inflige $degatsInfliges dégâts à " . $selectedCharacter->getNom() . "</p>";
+                }
+                $nombreDeManches++; // Incrémenter le nombre de manches
+            }
+
+            // Affichage du résultat du combat
+            if (!$selectedCharacter->estVivant()) {
+                echo "<p>" . $selectedCharacter->getNom() . " a été vaincu par " . $ennemi->getNom() . "!</p>";
+            } else {
+                echo "<p>" . $ennemi->getNom() . " a été vaincu par " . $selectedCharacter->getNom() . "!</p>";
+
+                $score = 100 - ($nombreDeManches * 10);
+                if ($score < 0) {
+                    $score = 0;
+                }
+                echo "<p>Votre score est : $score</p>";
+                
+                // Mettre à jour le niveau du joueur dans la base de données
+                $nouveauNiveau = 3; // Augmentation du niveau
+                $requeteMajNiveau = "UPDATE niveau SET niveau = $nouveauNiveau WHERE joueur = '" . $_SESSION['pseudo'] . "'";
+                $resultatMajNiveau = mysqli_query($connexion, $requeteMajNiveau);
+                
+                if (!$resultatMajNiveau) {
+                    die("Erreur lors de la mise à jour du niveau du joueur : " . mysqli_error($connexion));
+                }
+                
+                // Optionnel : Mettre à jour le score du joueur dans la base de données
+                $requeteMajScore = "UPDATE score_combat SET score = $score WHERE joueur = '" . $_SESSION['pseudo'] . "'";
+                $resultatMajScore = mysqli_query($connexion, $requeteMajScore);
+                
+                if (!$resultatMajScore) {
+                    die("Erreur lors de la mise à jour du score du joueur : " . mysqli_error($connexion));
+                }
+                
+                header("refresh:10;url=map.php");
+                echo "<p><strong>Redirection vers la page de la carte dans 10 secondes...<strong></p>";
+                exit();
+        }
+    } else {
+        echo "Personnage sélectionné non trouvé.";
+    }
+}}
+echo "</div>";
+mysqli_close($connexion);
+?>
+    </div>
 </body>
 </html>
+

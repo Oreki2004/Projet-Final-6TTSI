@@ -10,16 +10,22 @@
             background-repeat: no-repeat;
             background-size: cover;
             font-family: Arial, sans-serif;
+            
+        }
+        .body{
+            background-color: rgba(0, 0, 0, 0.5);
+
         }
         a {
             text-decoration: none;
-            color: white; 
+            color: black; 
         }
         header nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 20px;
+            
         }
         .logo {
             width: 100px;
@@ -147,6 +153,7 @@
     </style>
 </head>
 <body>
+    <div class="body">
     <header class="main-head">
         <nav>
         <a href="index.php"><img class="logo" align="left" alt="URD" src="LOGO/téléchargement (2).svg"></a>
@@ -215,6 +222,6 @@
             <div class="button"><input type="submit" value="Submit"></div>
             
         </form>
-    </div>
+    </div></div>
 </body>
 </html>

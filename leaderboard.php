@@ -115,6 +115,20 @@
         display: block;
         
         }
+        .leaderboard{
+            color: white;
+            margin: 0 auto;
+            width: fit-content;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        table{
+            border-collapse: collapse;
+            border-style: none;
+        }
+        tr:nth-child(2n+2){
+            background: white;
+            color: black;
+        }
     </style>
 </head>
 <body>
@@ -140,5 +154,56 @@
             </ul>
         </nav>
     </header>
+    <section class="leaderboard">
+        <h2>Leaderboard</h2>
+        <table border="1">
+            <tr>
+                <th>Joueur</th>
+                <th>Score Guesser</th>
+                <th>Score Jeu de Paires</th>
+                <th>Score Quiz</th>
+                <th>Score Combat</th>
+                <th>Score Total</th>
+            </tr>
+            <?php
+            $conn = new mysqli("localhost", "root", "", "urd");
+
+            if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            }
+            $sql = "SELECT j.pseudo AS Joueur,
+                            COALESCE(SUM(gs.score), 0) AS ScoreGuesser,
+                            COALESCE(SUM(jp.score), 0) AS ScoreJeuPaires,
+                            COALESCE(SUM(sq.score), 0) AS ScoreQuiz,
+                            COALESCE(SUM(sc.score), 0) AS ScoreCombat,
+                            COALESCE(SUM(gs.score) + SUM(jp.score) + SUM(sq.score) + SUM(sc.score), 0) AS ScoreTotal
+                    FROM joueur j
+                    LEFT JOIN guesser_score gs ON j.pseudo = gs.joueur
+                    LEFT JOIN jeu_paires jp ON j.pseudo = jp.pseudo
+                    LEFT JOIN score_quiz sq ON j.pseudo = sq.joueur
+                    LEFT JOIN score_combat sc ON j.pseudo = sc.joueur
+                    GROUP BY j.pseudo
+                    ORDER BY ScoreTotal DESC";
+
+            $result = $conn->query($sql);
+
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    echo "<tr>";
+                    echo "<td>" . $row['Joueur'] . "</td>";
+                    echo "<td>" . $row['ScoreGuesser'] . "</td>";
+                    echo "<td>" . $row['ScoreJeuPaires'] . "</td>";
+                    echo "<td>" . $row['ScoreQuiz'] . "</td>";
+                    echo "<td>" . $row['ScoreCombat'] . "</td>";
+                    echo "<td>" . $row['ScoreTotal'] . "</td>";
+                    echo "</tr>";
+                }
+            } else {
+                echo "<tr><td colspan='6'>Aucun résultat trouvé</td></tr>";
+            }
+            $conn->close();
+            ?>
+        </table>
+    </section>
 </body>
 </html>

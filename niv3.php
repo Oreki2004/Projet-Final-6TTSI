@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<?php 
+<?php
 session_start();
 
 $connexion = mysqli_connect("localhost", "root", "", "urd") or die("La connexion à la base de données a échoué : " . mysqli_connect_error());
@@ -22,12 +22,26 @@ if ($ligne) {
 } else {
     echo "Impossible de récupérer le niveau pour " . $pseudo;
 }
+if (isset($_POST['score'])) {
+    $score = $_POST['score'];
+    $tempsRestant = $_POST['tempsRestant'];
+    $pseudo = $_SESSION['pseudo'];
 
+    // Si le temps est écoulé, met à jour le niveau dans la base de données
+    if ($tempsRestant <= 0) {
+        $nouveauNiveau = 4;
+        $requeteniveau = "UPDATE niveau SET niveau='$nouveauNiveau' WHERE joueur='$pseudo'";
+        if (!mysqli_query($connexion, $requeteniveau)) {
+            die("Erreur lors de la mise à jour du niveau: " . mysqli_error($connexion));
+        }
+        $_SESSION['niveau'] = $nouveauNiveau;
+    }
+
+}
 if (isset($_POST['score'])) {
     $score = $_POST['score'];
     $pseudo = $_SESSION['pseudo'];
 
-    // Insérer le score dans la base de données ou le mettre à jour s'il existe déjà un score pour cet utilisateur
     $requeteScore = "SELECT * FROM `jeu_paires` WHERE pseudo='$pseudo'";
     $resultatScore = mysqli_query($connexion, $requeteScore);
 
@@ -58,8 +72,12 @@ if (isset($_POST['score'])) {
         }
         $_SESSION['niveau'] = $nouveauNiveau;
     }
+
+    header("Location: map.php");
+    exit;
 }
 ?>
+
 <html>
 <head>
     <title>URD - JEU DES PAIRES</title>
@@ -170,6 +188,15 @@ if (isset($_POST['score'])) {
         table {
             margin: 10em auto;
         }
+        #timer{
+            color: white;
+            text-align: center;
+            width: fit-content;
+            margin: 0 auto;
+            font-weight: bold;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 2px;
+        }
     </style>
 </head>
 <body>
@@ -195,6 +222,9 @@ if (isset($_POST['score'])) {
             </ul>
         </nav>
     </header>
+
+    <div id="timer"></div>
+
     <table id="tapis">
         <tr>
             <td><img src="./cartes/fondcarte.png"/></td>
@@ -225,11 +255,53 @@ if (isset($_POST['score'])) {
             <td><img src="./cartes/fondcarte.png"/></td>
         </tr>
     </table>
+
+
     <form id="jeuForm" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-        <input type="hidden" id="scoreInput" name="score" value="">
-        <button type="button" id="finJeuBtn" onclick="fin()">Suivant</button>
+    <input type="hidden" id="scoreInput" name="score" value="">
+    <input type="hidden" id="tempsRestantInput" name="tempsRestant" value=""> 
+    <button type="button" id="finJeuBtn" onclick="fin()">Suivant</button>
     </form>
+
+
     <script>
+var tempsInitial = localStorage.getItem("tempsInitial");
+
+if (!tempsInitial) {
+    // Si aucun temps initial n'est trouvé, initialiser à 60 secondes
+    tempsInitial = 60;
+    localStorage.setItem("tempsInitial", tempsInitial);
+} else {
+    // Convertir le temps initial en nombre
+    tempsInitial = parseInt(tempsInitial);
+}
+
+var tempsRestant = tempsInitial; // Utiliser le temps initial stocké comme temps restant initial
+
+var tempsRestantInput = document.getElementById("tempsRestantInput");
+var timerElement = document.getElementById("timer");
+
+function compteRebours() {
+    tempsRestant--;
+    tempsRestantInput.value = tempsRestant;
+
+    var minutes = Math.floor(tempsRestant / 60);
+    var secondes = tempsRestant % 60;
+
+    var minutesAffichees = minutes < 10 ? "0" + minutes : minutes;
+    var secondesAffichees = secondes < 10 ? "0" + secondes : secondes;
+
+    timerElement.textContent = "Temps restant : " + minutesAffichees + ":" + secondesAffichees;
+
+    if (tempsRestant <= 0) {
+        document.getElementById("jeuForm").submit();
+    } else {
+        setTimeout(compteRebours, 1000);
+    }
+}
+
+compteRebours();
+
         var motifsCartes = [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10];
         var etatsCartes = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; 
         var cartesRetournees = [];
