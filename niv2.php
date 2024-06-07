@@ -30,14 +30,12 @@
         </nav>
     </header>
     <?php
-// Connexion à la base de données
 $connexion = mysqli_connect("localhost", "root", "", "urd");
 
 if (!$connexion) {
     die("La connexion à la base de données a échoué : " . mysqli_connect_error());
 }
 
-// Définition des classes de personnages
 class Personnage
 {
     protected $nom;
@@ -45,7 +43,6 @@ class Personnage
     protected $vie;
     protected $img;
 
-    // Constructeur
     public function __construct($nom, $force, $vie, $img)
     {
         $this->nom = $nom;
@@ -54,13 +51,11 @@ class Personnage
         $this->img = $img;
     }
 
-    // Méthode pour vérifier si le personnage est vivant
     public function estVivant()
     {
         return $this->vie > 0;
     }
 
-    // Méthode pour infliger des dégâts à un autre personnage
     public function attaquer(Personnage $ennemi)
     {
         $degats = $this->force;
@@ -68,13 +63,11 @@ class Personnage
         return $degats;
     }
 
-    // Méthode pour recevoir des dégâts
     public function recevoirDegats($degats)
     {
         $this->vie = max(0, $this->vie - $degats);
     }
 
-    // Méthodes pour récupérer les informations du personnage
     public function getNom()
     {
         return $this->nom;
@@ -98,31 +91,56 @@ class Personnage
 
 class Titan extends Personnage
 {
-    // Marteau
+    public function attaquer(Personnage $ennemi)
+    {
+        $degats = rand(15, 25); 
+        $ennemi->recevoirDegats($degats);
+        return $degats;
+    }
 }
 
 class Arcaniste extends Personnage
 {
-    // Bombe Nova
+    public function attaquer(Personnage $ennemi)
+    {
+        $degats = rand(20, 25); 
+        $ennemi->recevoirDegats($degats);
+        return $degats;
+    }
 }
 
 class Chasseur extends Personnage
 {
-    // Lames
+    public function attaquer(Personnage $ennemi)
+    {
+        $degats = rand(22, 30);
+        $ennemi->recevoirDegats($degats);
+        return $degats;
+    }
 }
 
-$requeteJoueur = "SELECT *, 'Chasseur' AS classe FROM perso_joueur"; 
+$requeteJoueur = "SELECT nom, `force`, vie, img, nom FROM perso_joueur"; 
 $resultatJoueur = mysqli_query($connexion, $requeteJoueur);
 
 if (!$resultatJoueur) {
     die("Erreur lors de la récupération des personnages du joueur : " . mysqli_error($connexion));
 }
 
-
 $personnagesJoueur = [];
-while ($row = mysqli_fetch_assoc($resultatJoueur
-)) {
-    $personnagesJoueur[] = new $row['classe']($row['nom'], $row['force'], $row['vie'], $row['img']);
+while ($row = mysqli_fetch_assoc($resultatJoueur)) {
+    switch ($row['nom']) {
+        case 'Titan':
+            $personnagesJoueur[] = new Titan($row['nom'], $row['force'], $row['vie'], $row['img']);
+            break;
+        case 'Arcaniste':
+            $personnagesJoueur[] = new Arcaniste($row['nom'], $row['force'], $row['vie'], $row['img']);
+            break;
+        case 'Chasseur':
+            $personnagesJoueur[] = new Chasseur($row['nom'], $row['force'], $row['vie'], $row['img']);
+            break;
+        default:
+            break;
+    }
 }
 ?>
 
@@ -164,14 +182,14 @@ if (isset($_POST['submit'])) {
         $ennemi = mysqli_fetch_assoc($resultatEnnemis);
         $ennemi = new Personnage($ennemi['nom'], $ennemi['force'], $ennemi['vie'], $ennemi['img']);
         $nombreDeManches = 0;
+
         if ($ennemi) {
             echo "<div class='combat-container'>";
             echo "<div class='combatant'><img src='img_combat/" . $selectedCharacter->getImg() . "' alt=''></div>";
-            echo "<div class='versus'><img src=img_combat/VS></div>";
+            echo "<div class='versus'><img src='img_combat/VS.png'></div>";
             echo "<div class='combatant'><img src='img_combat/" . $ennemi->getImg() . "' alt=''></div>";
             echo "</div><div class='log'>";
 
-            // Déroulement du combat
             while ($selectedCharacter->estVivant() && $ennemi->estVivant()) {
                 $degatsInfliges = $selectedCharacter->attaquer($ennemi);
                 echo "<p>" . $selectedCharacter->getNom() . " inflige $degatsInfliges dégâts à " . $ennemi->getNom() . "</p>";
@@ -179,10 +197,9 @@ if (isset($_POST['submit'])) {
                     $degatsInfliges = $ennemi->attaquer($selectedCharacter);
                     echo "<p>" . $ennemi->getNom() . " inflige $degatsInfliges dégâts à " . $selectedCharacter->getNom() . "</p>";
                 }
-                $nombreDeManches++; // Incrémenter le nombre de manches
+                $nombreDeManches++; 
             }
 
-            // Affichage du résultat du combat
             if (!$selectedCharacter->estVivant()) {
                 echo "<p>" . $selectedCharacter->getNom() . " a été vaincu par " . $ennemi->getNom() . "!</p>";
             } else {
@@ -193,36 +210,34 @@ if (isset($_POST['submit'])) {
                     $score = 0;
                 }
                 echo "<p>Votre score est : $score</p>";
-                
-                // Mettre à jour le niveau du joueur dans la base de données
-                $nouveauNiveau = 3; // Augmentation du niveau
+
+                $nouveauNiveau = 3; 
                 $requeteMajNiveau = "UPDATE niveau SET niveau = $nouveauNiveau WHERE joueur = '" . $_SESSION['pseudo'] . "'";
                 $resultatMajNiveau = mysqli_query($connexion, $requeteMajNiveau);
-                
+
                 if (!$resultatMajNiveau) {
                     die("Erreur lors de la mise à jour du niveau du joueur : " . mysqli_error($connexion));
                 }
-                
-                // Optionnel : Mettre à jour le score du joueur dans la base de données
+
                 $requeteMajScore = "UPDATE score_combat SET score = $score WHERE joueur = '" . $_SESSION['pseudo'] . "'";
                 $resultatMajScore = mysqli_query($connexion, $requeteMajScore);
-                
+
                 if (!$resultatMajScore) {
                     die("Erreur lors de la mise à jour du score du joueur : " . mysqli_error($connexion));
                 }
-                
+
                 header("refresh:10;url=map.php");
-                echo "<p><strong>Redirection vers la page de la carte dans 10 secondes...<strong></p>";
+                echo "<p><strong>Redirection vers la page de la carte dans 10 secondes...</strong></p>";
                 exit();
+            }
+        } else {
+            echo "Personnage sélectionné non trouvé.";
         }
-    } else {
-        echo "Personnage sélectionné non trouvé.";
     }
-}}
+}
 echo "</div>";
 mysqli_close($connexion);
 ?>
     </div>
 </body>
 </html>
-

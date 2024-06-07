@@ -63,7 +63,6 @@ if (!isset($_SESSION['attempts'])) {
         nav ul li {
             margin-right: 20px;
         }
-        /* Responsive Styles */
         @media screen and (max-width: 768px) {
             nav ul {
                 flex-direction: column;
@@ -210,6 +209,9 @@ if (!isset($_SESSION['attempts'])) {
         background-color: #1a73e8;
     padding: 0 .2em;
     color: white;
+    }
+    h2{
+        color:white;
     }
     </style>
 </head>

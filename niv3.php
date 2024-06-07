@@ -268,15 +268,13 @@ if (isset($_POST['score'])) {
 var tempsInitial = localStorage.getItem("tempsInitial");
 
 if (!tempsInitial) {
-    // Si aucun temps initial n'est trouvé, initialiser à 60 secondes
     tempsInitial = 60;
     localStorage.setItem("tempsInitial", tempsInitial);
 } else {
-    // Convertir le temps initial en nombre
     tempsInitial = parseInt(tempsInitial);
 }
 
-var tempsRestant = tempsInitial; // Utiliser le temps initial stocké comme temps restant initial
+var tempsRestant = tempsInitial;
 
 var tempsRestantInput = document.getElementById("tempsRestantInput");
 var timerElement = document.getElementById("timer");
