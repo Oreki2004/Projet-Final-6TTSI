@@ -116,6 +116,16 @@
         .dropdown:hover .dropdown-content {
             display: block;
         }
+        #suivant{
+            font-size: 2em;
+            color: green;
+            border: solid 0.1em green;
+            margin-left: 1em;
+        }
+        #suivant:hover{
+        transform: scale(1.2);
+        transition-duration: .3s;
+        }
     </style>
 </head>
 <body>
@@ -165,8 +175,8 @@
                 $score_joueur = $row['score'];
 
                 $score_actuel = 0;
-                $reponses_utilisateur = $_POST['reponses'];
-                foreach ($reponses_utilisateur as $id_question => $reponse_utilisateur) {
+                $reponse_utilisateur = $_POST['reponses'];
+                foreach ($reponse_utilisateur as $id_question => $reponse_utilisateur) {
                     $query = "SELECT est_correcte FROM quiz_reponse WHERE id = $reponse_utilisateur";
                     $result = $mysqli->query($query);
                     if ($result) {
@@ -189,6 +199,7 @@
                     echo "Ton score actuel est de " . $score_actuel . ", tu peux faire mieux.";
                 }
             } else {
+                $reponse_utilisateur = $_POST['reponses'];
                 $score_actuel = 0;
                 foreach ($reponse_utilisateur as $id_question => $reponse_utilisateur) {
                     $query = "SELECT est_correcte FROM quiz_reponse WHERE id = $reponse_utilisateur";
@@ -214,6 +225,6 @@
     }
     $mysqli->close();
     ?>
-    <div class="button"><a href="map.php">Suivant</a></div>
+    <div class="button"><a id="suivant" href="map.php">Suivant</a></div>
 </body>
 </html>

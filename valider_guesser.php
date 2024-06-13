@@ -118,6 +118,12 @@
         .dropdown:hover .dropdown-content {
             display: block;
         }
+        br + a{
+            font-size: 2em;
+            color: green;
+            border: solid 0.1em green;
+            margin-left: 1em;
+        }
     </style>
 </head>
 <body>
@@ -175,7 +181,7 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
                 $score = 10;
                 $verifscore = "SELECT * FROM guesser_score WHERE joueur = '$pseudo'";
                 $verif = $conn->query($verifscore);
-            
+                
                 if ($verif->num_rows > 0) {
                     $majscore = "UPDATE guesser_score SET score = score + $score WHERE joueur = '$pseudo'";
                     if ($conn->query($majscore) === TRUE) {
@@ -194,10 +200,10 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
             } else {
 
                 if ($_SESSION['tentatives']-- > 0) {
-                    echo "Désolé, votre réponse est incorrecte. Vous avez encore $tentatives tentatives.";
+                    echo "Désolé, votre réponse est incorrecte. Vous avez encore $tentatives tentatives.<br>";
                     echo "<br><a href='niv4.php'>Réessayer</a>";
                 } else {
-                    echo "Désolé, votre réponse est incorrecte. Vous n'avez plus de tentatives.";
+                    echo "Désolé, votre réponse est incorrecte. Vous n'avez plus de tentatives.<br>";
                     echo "<br><a href='map.php'>Suivant</a>";
                 }
             }
@@ -210,7 +216,6 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
 } else {
     echo "Vous devez être connecté pour jouer.";
 }
-
 
 $conn->close();
 ?>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : jeu. 06 juin 2024 à 01:24
+-- Généré le : jeu. 13 juin 2024 à 11:49
 -- Version du serveur : 8.0.31
 -- Version de PHP : 8.0.26
 
@@ -54,14 +54,17 @@ CREATE TABLE IF NOT EXISTS `guesser_score` (
   `joueur` varchar(255) NOT NULL,
   `score` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `guesser_score`
 --
 
 INSERT INTO `guesser_score` (`id`, `joueur`, `score`) VALUES
-(1, 'Oreki', 70);
+(1, 'Oreki', 80),
+(6, 'sach', 10),
+(7, 'teilo', 10),
+(8, 'test', 10);
 
 -- --------------------------------------------------------
 
@@ -75,14 +78,17 @@ CREATE TABLE IF NOT EXISTS `jeu_paires` (
   `pseudo` varchar(255) NOT NULL,
   `score` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `jeu_paires`
 --
 
 INSERT INTO `jeu_paires` (`id`, `pseudo`, `score`) VALUES
-(1, 'Oreki', 0);
+(1, 'Oreki', 10),
+(2, 'sach', 10),
+(3, 'teilo', 10),
+(4, 'test', 10);
 
 -- --------------------------------------------------------
 
@@ -97,7 +103,7 @@ CREATE TABLE IF NOT EXISTS `joueur` (
   `email` varchar(255) NOT NULL,
   `mdp` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `joueur`
@@ -105,7 +111,11 @@ CREATE TABLE IF NOT EXISTS `joueur` (
 
 INSERT INTO `joueur` (`id`, `pseudo`, `email`, `mdp`) VALUES
 (2, 'Oreki', 'gs10arunmoli@gmail.com', 'arun'),
-(3, 'Maurice', 'mauricelataupe@gmail.com', 'maurice');
+(3, 'Maurice', 'mauricelataupe@gmail.com', 'maurice'),
+(4, 'Oreki', 'arunmoli.sathiyaseelan@istlm.org', 'qrun'),
+(5, 'sach', 'sach@gmail.com', 'azerty'),
+(6, 'teilo', 'teiloira@gmail.com', 'test'),
+(7, 'test', 'test@gmail.com', 'test');
 
 -- --------------------------------------------------------
 
@@ -120,7 +130,7 @@ CREATE TABLE IF NOT EXISTS `niveau` (
   `niveau` int NOT NULL,
   `joueur` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `niveau`
@@ -128,7 +138,11 @@ CREATE TABLE IF NOT EXISTS `niveau` (
 
 INSERT INTO `niveau` (`id`, `id_joueur`, `niveau`, `joueur`) VALUES
 (1, 3, 1, 'Maurice'),
-(2, 2, 3, 'Oreki');
+(2, 2, 4, 'Oreki'),
+(6, 4, 4, 'Oreki'),
+(7, 5, 2, 'sach'),
+(8, 6, 4, 'teilo'),
+(9, 7, 4, 'test');
 
 -- --------------------------------------------------------
 
@@ -152,7 +166,7 @@ CREATE TABLE IF NOT EXISTS `perso_combat` (
 
 INSERT INTO `perso_combat` (`id`, `nom`, `force`, `vie`, `img`) VALUES
 (1, 'Rebut', 10, 50, 'Rebut.webp'),
-(2, 'Cabal', 20, 100, 'Cabal.webp');
+(2, 'Cabal', 20, 75, 'Cabal.webp');
 
 -- --------------------------------------------------------
 
@@ -272,14 +286,17 @@ CREATE TABLE IF NOT EXISTS `score_combat` (
   `joueur` varchar(255) NOT NULL,
   `score` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `score_combat`
 --
 
 INSERT INTO `score_combat` (`id`, `joueur`, `score`) VALUES
-(1, 'Oreki', 70);
+(1, 'Oreki', 70),
+(2, 'sach', 70),
+(3, 'teilo', 60),
+(4, 'test', 60);
 
 -- --------------------------------------------------------
 
@@ -293,7 +310,7 @@ CREATE TABLE IF NOT EXISTS `score_quiz` (
   `joueur` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `score` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `score_quiz`
@@ -301,7 +318,10 @@ CREATE TABLE IF NOT EXISTS `score_quiz` (
 
 INSERT INTO `score_quiz` (`id`, `joueur`, `score`) VALUES
 (1, 'Oreki', 4),
-(2, 'Maurice', 1);
+(2, 'Maurice', 1),
+(20, 'sach', 3),
+(19, 'teilo', 3),
+(21, 'test', 3);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
