@@ -1,5 +1,11 @@
 <!DOCTYPE html>
-<?php session_start() ?>
+<?php session_start();
+if(!isset($_SESSION['pseudo'])){
+    header('index.php');
+    exit();
+}
+
+?>
 <html>
 <head>
     <title>URD - QUIZ</title>
@@ -181,32 +187,25 @@
         <form method="post" action="valider_quiz.php">
             <div class="form">
                 <?php
-        // Connexion à la base de données
         $mysqli = new mysqli("localhost", "root", "", "urd");
 
-        // Vérification de la connexion
         if ($mysqli->connect_error) {
             die("La connexion à la base de données a échoué : " . $mysqli->connect_error);
         }
 
-        // Récupération des questions aléatoires
         $query_questions = "SELECT * FROM quiz ORDER BY RAND() LIMIT 4";
         $result_questions = $mysqli->query($query_questions);
 
-        // Affichage des questions
         while ($ligne = $result_questions->fetch_assoc()) {
-            // Récupération des réponses pour cette question
-            $query_answers = "SELECT * FROM quiz_reponse WHERE id_question = " . $ligne['id'] . " ORDER BY RAND()";
-            $result_answers = $mysqli->query($query_answers);
+            $query_reponses = "SELECT * FROM quiz_reponse WHERE id_question = " . $ligne['id'] . " ORDER BY RAND()";
+            $result_reponses = $mysqli->query($query_reponses);
             
-            // Affichage de la question
             echo "<div>";
             echo "<div class='question'><strong>Question:</strong> ".$ligne['question']."</div>";
             
-            // Affichage des réponses
-            while ($answer = $result_answers->fetch_assoc()) {
-                echo "<input id='option' type='radio' name='reponses[" . $ligne['id'] . "]' value='" . $answer['id'] . "' required>";
-                echo $answer['reponse'] . "<br>";
+            while ($reponse = $result_reponses->fetch_assoc()) {
+                echo "<input id='option' type='radio' name='reponses[" . $ligne['id'] . "]' value='" . $reponse['id'] . "' required>";
+                echo $reponse['reponse'] . "<br>";
             }
             
             echo "</div>";
@@ -214,7 +213,6 @@
 
         }
 
-        // Fermeture de la connexion à la base de données
         $mysqli->close();
         ?>
 

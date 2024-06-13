@@ -1,5 +1,7 @@
 <?php session_start(); 
-
+       if(!isset($_SESSION['pseudo'])){
+        header('Location:index.php');
+        exit();};
 $conn = new mysqli("localhost", "root", "", "urd");
 
 
@@ -24,8 +26,8 @@ if ($result->num_rows > 0) {
     $image = ""; 
 }
 
-if (!isset($_SESSION['attempts'])) {
-    $_SESSION['attempts'] = 3;
+if (!isset($_SESSION['tentatives'])) {
+    $_SESSION['tentatives'] = 2;
 }
 ?>
 
@@ -40,6 +42,7 @@ if (!isset($_SESSION['attempts'])) {
             background-repeat: no-repeat;
             background-size: cover;
             font-family: Arial, sans-serif; 
+            overflow-x: hidden;
         }
         a {
             text-decoration: none;
@@ -249,7 +252,7 @@ if (!isset($_SESSION['attempts'])) {
             <label class="user-label">Réponse</label>
             </div><br>
             <input type="hidden" name="img" value="<?php echo $image; ?>">
-            <input type="hidden" name="attempts" value="<?php echo $_SESSION['attempts']; ?>">
+            <input type="hidden" name="tentatives" value="<?php echo $_SESSION['tentatives']; ?>">
             <button class="button" type="submit">Valider</button>
         </form>
     </div>

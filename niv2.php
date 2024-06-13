@@ -1,4 +1,8 @@
-<?php session_start() ?>
+<?php session_start();
+       if(!isset($_SESSION['pseudo'])){
+        header('Location:index.php');
+        exit();}
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -148,7 +152,7 @@ while ($row = mysqli_fetch_assoc($resultatJoueur)) {
     <h1>Choisissez votre personnage</h1>
     <div class="select-character">
         <form method="POST">
-            <select name="selected_character">
+            <select name="perso_choisi">
                 <?php
                 foreach ($personnagesJoueur as $personnage) {
                     echo "<option value='" . $personnage->getNom() . "'>" . $personnage->getNom() . "</option>";
@@ -162,16 +166,16 @@ while ($row = mysqli_fetch_assoc($resultatJoueur)) {
 
 <?php
 if (isset($_POST['submit'])) {
-    $selectedCharacterName = $_POST['selected_character'];
-    $selectedCharacter = null;
+    $nom_perso_choisi = $_POST['perso_choisi'];
+    $perso_choisi = null;
     foreach ($personnagesJoueur as $personnage) {
-        if ($personnage->getNom() === $selectedCharacterName) {
-            $selectedCharacter = $personnage;
+        if ($personnage->getNom() === $nom_perso_choisi) {
+            $perso_choisi = $personnage;
             break;
         }
     }
 
-    if ($selectedCharacter) {
+    if ($perso_choisi) {
         $requeteEnnemis = "SELECT * FROM perso_combat ORDER BY RAND() LIMIT 1"; 
         $resultatEnnemis = mysqli_query($connexion, $requeteEnnemis);
 
@@ -185,25 +189,25 @@ if (isset($_POST['submit'])) {
 
         if ($ennemi) {
             echo "<div class='combat-container'>";
-            echo "<div class='combatant'><img src='img_combat/" . $selectedCharacter->getImg() . "' alt=''></div>";
+            echo "<div class='combatant'><img src='img_combat/" . $perso_choisi->getImg() . "' alt=''></div>";
             echo "<div class='versus'><img src='img_combat/VS.png'></div>";
             echo "<div class='combatant'><img src='img_combat/" . $ennemi->getImg() . "' alt=''></div>";
             echo "</div><div class='log'>";
 
-            while ($selectedCharacter->estVivant() && $ennemi->estVivant()) {
-                $degatsInfliges = $selectedCharacter->attaquer($ennemi);
-                echo "<p>" . $selectedCharacter->getNom() . " inflige $degatsInfliges dégâts à " . $ennemi->getNom() . "</p>";
+            while ($perso_choisi->estVivant() && $ennemi->estVivant()) {
+                $degatsInfliges = $perso_choisi->attaquer($ennemi);
+                echo "<p>" . htmlspecialchars($perso_choisi->getNom()) . " inflige $degatsInfliges dégâts à " . htmlspecialchars($ennemi->getNom()) . "</p>";
                 if ($ennemi->estVivant()) {
-                    $degatsInfliges = $ennemi->attaquer($selectedCharacter);
-                    echo "<p>" . $ennemi->getNom() . " inflige $degatsInfliges dégâts à " . $selectedCharacter->getNom() . "</p>";
+                    $degatsInfliges = $ennemi->attaquer($perso_choisi);
+                    echo "<p>" . htmlspecialchars($ennemi->getNom()) . " inflige $degatsInfliges dégâts à " . htmlspecialchars($perso_choisi->getNom()) . "</p>";
                 }
                 $nombreDeManches++; 
             }
 
-            if (!$selectedCharacter->estVivant()) {
-                echo "<p>" . $selectedCharacter->getNom() . " a été vaincu par " . $ennemi->getNom() . "!</p>";
+            if (!$perso_choisi->estVivant()) {
+                echo "<p>" . htmlspecialchars($perso_choisi->getNom()) . " a été vaincu par " . htmlspecialchars($ennemi->getNom()) . "!</p>";
             } else {
-                echo "<p>" . $ennemi->getNom() . " a été vaincu par " . $selectedCharacter->getNom() . "!</p>";
+                echo "<p>" . htmlspecialchars($ennemi->getNom()) . " a été vaincu par " . htmlspecialchars($perso_choisi->getNom()) . "!</p>";
 
                 $score = 100 - ($nombreDeManches * 10);
                 if ($score < 0) {
@@ -212,14 +216,31 @@ if (isset($_POST['submit'])) {
                 echo "<p>Votre score est : $score</p>";
 
                 $nouveauNiveau = 3; 
-                $requeteMajNiveau = "UPDATE niveau SET niveau = $nouveauNiveau WHERE joueur = '" . $_SESSION['pseudo'] . "'";
+                // Vérifier si l'utilisateur existe dans la table niveau
+                $pseudo = $_SESSION['pseudo'];
+                $requeteNiveau = "SELECT * FROM niveau WHERE joueur = '$pseudo'";
+                $resultatNiveau = mysqli_query($connexion, $requeteNiveau);
+
+                if (mysqli_num_rows($resultatNiveau) > 0) {
+                    $requeteMajNiveau = "UPDATE niveau SET niveau = $nouveauNiveau WHERE joueur = '$pseudo'";
+                } else {
+                    $requeteMajNiveau = "INSERT INTO niveau (joueur, niveau) VALUES ('$pseudo', $nouveauNiveau)";
+                }
                 $resultatMajNiveau = mysqli_query($connexion, $requeteMajNiveau);
 
                 if (!$resultatMajNiveau) {
                     die("Erreur lors de la mise à jour du niveau du joueur : " . mysqli_error($connexion));
                 }
 
-                $requeteMajScore = "UPDATE score_combat SET score = $score WHERE joueur = '" . $_SESSION['pseudo'] . "'";
+                // Vérifier si l'utilisateur existe dans la table score_combat
+                $requeteScore = "SELECT * FROM score_combat WHERE joueur = '$pseudo'";
+                $resultatScore = mysqli_query($connexion, $requeteScore);
+
+                if (mysqli_num_rows($resultatScore) > 0) {
+                    $requeteMajScore = "UPDATE score_combat SET score = $score WHERE joueur = '$pseudo'";
+                } else {
+                    $requeteMajScore = "INSERT INTO score_combat (joueur, score) VALUES ('$pseudo', $score)";
+                }
                 $resultatMajScore = mysqli_query($connexion, $requeteMajScore);
 
                 if (!$resultatMajScore) {

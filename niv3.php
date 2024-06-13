@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <?php
 session_start();
+if(!isset($_SESSION['pseudo'])){
+    header('Location:index.php');
+    exit();}
 
 $connexion = mysqli_connect("localhost", "root", "", "urd") or die("La connexion à la base de données a échoué : " . mysqli_connect_error());
 
@@ -88,6 +91,8 @@ if (isset($_POST['score'])) {
             background-repeat: no-repeat;
             background-size: cover;
             font-family: Arial, sans-serif; 
+            overflow: hidden;
+
         }
         a {
             text-decoration: none;
@@ -185,6 +190,19 @@ if (isset($_POST['score'])) {
             max-width: 100px;
             height: 80px;
         }
+
+        table img:hover{
+            transform: scale(1.2);
+            transition-duration: .3s;
+        }
+        table img::before{
+
+        }
+
+        table img::after{
+
+        }
+
         table {
             margin: 10em auto;
         }
@@ -298,7 +316,7 @@ function compteRebours() {
     }
 }
 
-compteRebours();
+        compteRebours();
 
         var motifsCartes = [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10];
         var etatsCartes = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; 
@@ -357,6 +375,7 @@ compteRebours();
                         majAffichage(cartesRetournees[1]);
                         cartesRetournees = [];
                         if (nbPairesTrouvees == 10) {
+                        alert("Vous avez réussi, votre score est de 10")
                             fin();
                         }
                     }, 750);

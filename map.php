@@ -1,7 +1,9 @@
 <?php 
        session_start();
-       
-        ?>
+       if(!isset($_SESSION['pseudo'])){
+        header('Location:index.php');
+        exit();
+    }?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,6 +16,7 @@
             background: rgb(0,0,0);
             background: radial-gradient(circle, rgba(0,0,0,1) 75%, rgba(85,85,85,1) 100%);
             font-family: Arial, sans-serif; 
+            overflow-x: hidden;
         }
         a {
             text-decoration: none;

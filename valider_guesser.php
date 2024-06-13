@@ -155,7 +155,7 @@ if ($conn->connect_error) {
 if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
     $pseudo = $_SESSION['pseudo'];
     $id = $_SESSION['id'];
-    $attempts = isset($_POST['attempts']) ? (int)$_POST['attempts'] : 3;
+    $tentatives = isset($_POST['tentatives']) ? (int)$_POST['tentatives'] : 3;
 
     if (isset($_POST['guess']) && isset($_POST['img'])) {
         $guess = strtolower(trim($_POST['guess']));
@@ -166,26 +166,26 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
 
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
-            $correct_name = strtolower($row['nom']);
+            $correct = strtolower($row['nom']);
 
-            if (mb_strtolower($guess, 'UTF-8') == mb_strtolower($correct_name, 'UTF-8')) {
+            if (mb_strtolower($guess, 'UTF-8') == mb_strtolower($correct, 'UTF-8')) {
                 echo "Félicitations ! Vous avez deviné correctement.";
                 echo "<br><a href='map.php'>Suivant</a>";
             
                 $score = 10;
-                $sql_check_score = "SELECT * FROM guesser_score WHERE joueur = '$pseudo'";
-                $result_check_score = $conn->query($sql_check_score);
+                $verifscore = "SELECT * FROM guesser_score WHERE joueur = '$pseudo'";
+                $verif = $conn->query($verifscore);
             
-                if ($result_check_score->num_rows > 0) {
-                    $sql_update_score = "UPDATE guesser_score SET score = score + $score WHERE joueur = '$pseudo'";
-                    if ($conn->query($sql_update_score) === TRUE) {
+                if ($verif->num_rows > 0) {
+                    $majscore = "UPDATE guesser_score SET score = score + $score WHERE joueur = '$pseudo'";
+                    if ($conn->query($majscore) === TRUE) {
                         echo " Score mis à jour avec succès.";
                     } else {
                         echo " Erreur lors de la mise à jour du score: " . $conn->error;
                     }
                 } else {
-                    $sql_insert_score = "INSERT INTO guesser_score (id, joueur, score) VALUES ('', '$pseudo', '$score')";
-                    if ($conn->query($sql_insert_score) === TRUE) {
+                    $inserer = "INSERT INTO guesser_score (id, joueur, score) VALUES ('', '$pseudo', '$score')";
+                    if ($conn->query($inserer) === TRUE) {
                         echo " Score ajouté avec succès.";
                     } else {
                         echo " Erreur lors de l'ajout du score: " . $conn->error;
@@ -193,8 +193,8 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
                 }
             } else {
 
-                if ($_SESSION['attempts']-- > 0) {
-                    echo "Désolé, votre réponse est incorrecte. Vous avez encore $attempts tentatives.";
+                if ($_SESSION['tentatives']-- > 0) {
+                    echo "Désolé, votre réponse est incorrecte. Vous avez encore $tentatives tentatives.";
                     echo "<br><a href='niv4.php'>Réessayer</a>";
                 } else {
                     echo "Désolé, votre réponse est incorrecte. Vous n'avez plus de tentatives.";
